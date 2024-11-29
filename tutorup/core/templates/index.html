@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block banner %}
+
+<div x-data="{ currentPage: 'index' }" class="banner">
+    <div class="content">
+        <template x-if="currentPage === 'index'">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h1>Enhance your 
+                            learning experience with
+                            our numerous experts!</h1>
+                    </div>
+                    <div class="col-md-6">
+                        <img src="{% static 'images/indexbannerimg.png' %}" alt="Banner Image" class="img-fluid" style="padding-left:10%;">
+                    </div>
+                </div>
+            </div>
+          
+        </template>
+        
+    </div>
+   
+</div>
+{% endblock %}
+
+
+
+{% block content %}
+<div class="d-flex justify-content-center mt-4" >
+    <a href="#" class="btn orangebtn" style="background-color: #F99781 !important; color: white !important; width: 15%; margin-top: 2%; padding: 15px; border-radius: 30px;">
+        <h3>Join us!</h3>
+    </a>
+ 
+</div>
+<div class="d-flex justify-content-center mt-4 " style="color:#324373; padding-bottom: 7%;"><h1>Pick a subject</h1><a href="#"><img src="{% static 'images/more.svg' %}" alt="more button" style="padding:10px;"></a></div>
+
+<div class="d-flex justify-content-center">
+
+    <div class="col-md-3">
+        <h3 style="text-align: center; color:#324373;">Let us help you find the perfect tutor for 
+            you or your loved ones.</h3>
+            <div class="d-flex justify-content-center" >
+                <a href="#" class="btn orangebtn" style="background-color: #F99781 !important; color: white !important; padding: 15px; border-radius: 30px;">
+                    <h3>Join us!</h3>
+                </a>
+               
+            </div>
+    </div>
+    <img src="{% static 'images/deco_img.svg' %}" alt="lady sitting on computer">
+</div>
+{% endblock %}

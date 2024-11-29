@@ -1,0 +1,15 @@
+\venv
+**/__pycache__/
+*.py[cod]
+*$py.class
+.installed.cfg
+bin
+develop-eggs
+dist
+downloads
+eggs
+parts
+src/*.egg-info
+lib
+lib64
+db.sqlite3
