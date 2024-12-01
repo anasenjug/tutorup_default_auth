@@ -1,0 +1,21 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow">
+        <div class="card-body">
+          
+            <p class="card-text"><strong>Location:</strong> {{tutor_profile.location}} </p>
+            <p class="card-text"><strong>Hourly rate:</strong> {{tutor_profile.hourly_rate}}  </p>
+            <p class="card-text"><strong>About Me:</strong>     {{tutor_profile.about_me}}  </p>
+            <p class="card-text"><strong>Subjects I do</strong> {{tutor_profile.subjects}} </p>
+             
+
+        </div>
+    </div>
+    <div class="mt-4">
+        <a href="{% url 'tutor_profile_edit' %}" class="btn btn-primary">Edit Profile</a>
+    </div>
+</div>
+{% endblock %}
