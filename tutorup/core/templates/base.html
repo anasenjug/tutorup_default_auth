@@ -12,7 +12,7 @@
     <!-- Include Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous" defer></script>
     <!-- Custom CSS for banner -->
-    <script src="https://unpkg.com/htmx.org@2.0.3"></script>
+     <script src="https://unpkg.com/htmx.org@2.0.3"></script>
     
 <body>
     <nav class="navbar navbar-expand-lg navbar-light fs-5" style="background-color: #365295;">
@@ -27,7 +27,7 @@
                         
             </a>
             <div class="me-auto">
-                {% if not user.is_authenticated or user.profile.user_type == 'student' %}
+                {% if not user.is_authenticated or user.user_type == 'student' %}
                     <a href="{% url 'register_tutor' %}" class="text-light">Become a tutor</a>
                 {% endif %}
             </div>
@@ -43,7 +43,6 @@
                         {% if user.is_authenticated and user.user_type == 'tutor' %}
                             <a href="{% url 'tutor_profile_view' user.id %}" class="nav-link me-4">My Profile</a>
                         {% endif %}
-                        <span class="nav-link me-4 text-light" x-text="'Welcome, ' + (userType === 'student' ? 'Student' : 'Tutor')"></span>
                         <form action="{% url 'logout' %}" method="post" style="display:none;">
                             {% csrf_token %}
                             <button type="submit" id="logoutBtn"></button>

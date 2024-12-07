@@ -15,11 +15,11 @@ def student_register(request):
         if form.is_valid():
             form.save()
             return JsonResponse({'success': 'Registration successful!'}, status=200)
-        return render(request, 'partials/registration_errors.html', {'form': form}, status=400)
+        return render(request, {'form': form}, status=400)
 
     # Render form as a partial for htmx
     form = StudentRegistrationForm()
-    return render(request, 'partials/register_student_form.html', {'form': form})
+    return render(request, 'register_student.html', {'form': form})
 
 
 def tutor_register(request):
@@ -128,4 +128,10 @@ def tutor_search(request):
         'tutors': tutors_page,
     }
 
-    return render(request, 'tutor_search.html', context)
+    if request.htmx:
+        # If HTMX request, only return the search results part
+        return render(request, 'partials/tutor_search_results.html', context)
+    else:
+        # Otherwise, render the full page
+        context['form'] = TutorSearchForm(request.GET)
+        return render(request, 'tutor_search.html', context)

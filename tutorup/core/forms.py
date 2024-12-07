@@ -21,7 +21,7 @@ class TutorRegistrationForm(UserCreationForm):
 
     def save(self, commit=True):
         user = super().save(commit=False)
-        user.user_type = 'tutor'  # Set user type to user
+        user.user_type = 'tutor'  # Set user type to tutor
         user.is_active = False  # Account needs admin approval
         if commit:
             user.save()
