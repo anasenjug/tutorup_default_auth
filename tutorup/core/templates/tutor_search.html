@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form 
+    hx-get="{% url 'tutor_search' %}" 
+    hx-target="#search-results" 
+    hx-swap="outerHTML">
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+<div id="search-results">
+    {% include "partials/tutor_search_results.html" %}
+</div>
+
+{% endblock %}

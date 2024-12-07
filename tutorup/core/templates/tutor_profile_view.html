@@ -2,20 +2,20 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="card shadow">
-        <div class="card-body">
-          
-            <p class="card-text"><strong>Location:</strong> {{tutor_profile.location}} </p>
-            <p class="card-text"><strong>Hourly rate:</strong> {{tutor_profile.hourly_rate}}  </p>
-            <p class="card-text"><strong>About Me:</strong>     {{tutor_profile.about_me}}  </p>
-            <p class="card-text"><strong>Subjects I do</strong> {{tutor_profile.subjects}} </p>
-             
-
-        </div>
-    </div>
-    <div class="mt-4">
-        <a href="{% url 'tutor_profile_edit' %}" class="btn btn-primary">Edit Profile</a>
-    </div>
+<div class="container">
+    <h1>{{ tutor_profile.user.username }}'s Profile</h1>
+    {% if tutor_profile.profile_picture %}
+        <img src="{{ tutor_profile.profile_picture.url }}" alt="{{ tutor_profile.user.username }}'s Profile Picture" class="img-fluid" style="max-width: 200px;">
+    {% else %}
+        <p>No profile picture available</p>
+    {% endif %}
+    <p><strong>Location:</strong> {{ tutor_profile.location }}</p>
+    <p><strong>Hourly Rate:</strong> ${{ tutor_profile.hourly_rate }}</p>
+    <p><strong>About Me:</strong> {{ tutor_profile.about_me }}</p>
+    <p><strong>Subjects:</strong> {{ tutor_profile.subjects }}</p>
+    <p><strong>Qualifications:</strong> {{ tutor_profile.qualifications }}</p>
+    <p><strong>Availability:</strong> {{ tutor_profile.availability }}</p>
+    
+    <a href="{% url 'tutor_profile_edit' %}" class="btn btn-primary">Edit Profile</a>
 </div>
 {% endblock %}

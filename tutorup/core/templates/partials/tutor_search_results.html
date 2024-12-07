@@ -1,0 +1,33 @@
+<ul>
+    {% for tutor in tutors %}
+        <li>
+            <strong>{{ tutor.user.username }}</strong> - 
+            {{ tutor.subjects }}
+            {% if tutor.is_online %} (Online) {% endif %}
+            {% if tutor.is_in_person %} (In-person) {% endif %}
+        </li>
+    {% empty %}
+        <li>No tutors found matching your criteria.</li>
+    {% endfor %}
+</ul>
+
+<!-- Pagination -->
+<div class="pagination">
+    {% if tutors.has_previous %}
+        <button 
+            hx-get="?page={{ tutors.previous_page_number }}" 
+            hx-target="#search-results" 
+            hx-swap="outerHTML">
+            Previous
+        </button>
+    {% endif %}
+    <span>Page {{ tutors.number }} of {{ tutors.paginator.num_pages }}</span>
+    {% if tutors.has_next %}
+        <button 
+            hx-get="?page={{ tutors.next_page_number }}" 
+            hx-target="#search-results" 
+            hx-swap="outerHTML">
+            Next
+        </button>
+    {% endif %}
+</div>

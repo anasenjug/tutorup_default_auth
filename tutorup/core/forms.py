@@ -38,3 +38,16 @@ class TutorProfileForm(forms.ModelForm):
             'about_me': forms.Textarea(attrs={'rows': 4}),
             'availability': forms.Textarea(attrs={'rows': 2}),
         }
+
+class TutorSearchForm(forms.Form):
+    subject = forms.CharField(required=False, widget=forms.TextInput(attrs={'placeholder': 'Subject...'}))
+    location = forms.CharField(required=False, widget=forms.TextInput(attrs={'placeholder': 'Location...'}))
+    is_online = forms.BooleanField(required=False, label="Online", widget=forms.CheckboxInput)
+    is_in_person = forms.BooleanField(required=False, label="In-person", widget=forms.CheckboxInput)
+    min_price = forms.DecimalField(required=False, max_digits=6, decimal_places=2, label="Min Price")
+    max_price = forms.DecimalField(required=False, max_digits=6, decimal_places=2, label="Max Price")
+    # todo: ratings = forms.IntegerField(required=False, label="Min Rating", widget=forms.NumberInput(attrs={'min': 1, 'max': 5}))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
