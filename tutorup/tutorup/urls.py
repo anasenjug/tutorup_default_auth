@@ -14,7 +14,7 @@ urlpatterns = [
     path('', views.index, name='index'),
 
     # Authentication
-    path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
+    path('accounts/login/', auth_views.LoginView.as_view(template_name='login.html',next_page='index'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
 
     # Registration
@@ -24,7 +24,7 @@ urlpatterns = [
     # Tutor profile
     path('tutor/profile/<int:pk>/', views.tutor_profile_view, name='tutor_profile_view'),
     path('tutor/profile/edit/', views.tutor_profile_edit, name='tutor_profile_edit'),
-
+    path('api/featured-tutors', views.api_featured_tutors, name='api_featured_tutors'),
     # Search
     path('search/', views.tutor_search, name='tutor_search'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

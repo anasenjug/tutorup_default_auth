@@ -22,7 +22,11 @@ class TutorProfile(models.Model):
     subjects = models.TextField(blank=True, null=True)
     qualifications = models.TextField(blank=True, null=True)
     availability = models.TextField(blank=True, null=True)
-    profile_picture = models.ImageField(upload_to="tutor_profiles/", blank=True, null=True)
+    profile_picture = models.ImageField(
+        upload_to="tutor_profiles/", 
+        default="tutor_profiles/default.png",
+        )
+    is_featured = models.BooleanField(default = False)
 
     def __str__(self):
         return f"{self.user.username}'s Profile"

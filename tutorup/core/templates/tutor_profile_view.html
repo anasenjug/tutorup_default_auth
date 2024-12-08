@@ -1,4 +1,3 @@
-
 {% extends "base.html" %}
 
 {% block content %}
@@ -16,6 +15,8 @@
     <p><strong>Qualifications:</strong> {{ tutor_profile.qualifications }}</p>
     <p><strong>Availability:</strong> {{ tutor_profile.availability }}</p>
     
-    <a href="{% url 'tutor_profile_edit' %}" class="btn btn-primary">Edit Profile</a>
+    {% if request.user == tutor_profile.user %}
+        <a href="{% url 'tutor_profile_edit' %}" class="btn btn-primary">Edit Profile</a>
+    {% endif %}
 </div>
 {% endblock %}

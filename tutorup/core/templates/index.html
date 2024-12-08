@@ -35,7 +35,53 @@
     </a>
  
 </div>
-<div class="d-flex justify-content-center mt-4 " style="color:#324373; padding-bottom: 7%;"><h1>Pick a subject</h1><a href="#"><img src="{% static 'images/more.svg' %}" alt="more button" style="padding:10px;"></a></div>
+<script>
+    var tutorProfileUrl = "{% url 'tutor_profile_view' pk=0 %}";
+</script>
+<div class="d-flex justify-content-center mt-4 " style="color:#324373; padding-bottom: 7%;">
+    <div x-data="{
+        tutors: [],
+        loadTutors() {
+            fetch('/api/featured-tutors')
+                .then(response => response.json())
+                .then(data => {
+                    this.tutors = data;
+                });
+        }
+    }" x-init="loadTutors()" class="container mt-5">
+        
+        <h2 class="text-center" style="color: #324373;">Featured Tutors</h2>
+        
+        <div class="row" x-show="tutors.length > 0">
+            <template x-for="tutor in tutors" :key="tutor.id">
+                <div class="col-md-3">
+                    <div class="card" style="border: none;">
+                        <img :src="tutor.profile_picture" alt="Tutor" class="card-img-top" style="height: 200px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title" x-text="tutor.first_name + ' ' + tutor.last_name"></h5>
+                            <div class="d-flex justify-content-between">
+                                <span>
+                                    <span x-text="tutor.rating"></span> ★
+                                </span>
+                                <span>$<span x-text="tutor.hourly_rate"></span>/hr</span>
+                            </div>
+                            <p class="card-text" x-text="tutor.location"></p>
+                            <!-- Use the profile_url directly -->
+                            <a :href="tutor.profile_url">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <div x-show="tutors.length == 0" class="text-center mt-3">
+            <p>No featured tutors available at the moment.</p>
+        </div>
+    </div>
+
+  
+</div>
+<a class="d-flex justify-content-center" href="{% url 'tutor_search' %}"><h2>Find more here <img src="{% static 'images/more.svg' %}" alt="more button" style="padding:10px;"></h2></a>
 
 <div class="d-flex justify-content-center">
 
@@ -43,9 +89,11 @@
         <h3 style="text-align: center; color:#324373;">Let us help you find the perfect tutor for 
             you or your loved ones.</h3>
             <div class="d-flex justify-content-center" >
-                <a href="#" class="btn orangebtn" style="background-color: #F99781 !important; color: white !important; padding: 15px; border-radius: 30px;">
-                    <h3>Join us!</h3>
+                {% if user.is_authenticated and user.user_type == 'student' %}
+                <a href="{% url 'tutor_search' %}" class="btn orangebtn" style="background-color: #F99781 !important; color: white !important; padding: 15px; border-radius: 30px;">
+                    <h3>Find a tutor</h3>
                 </a>
+                {% endif %}
                
             </div>
     </div>

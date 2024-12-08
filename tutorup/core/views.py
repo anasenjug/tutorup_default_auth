@@ -33,8 +33,25 @@ def tutor_register(request):
     return render(request, 'register_tutor.html', {'form': form})
 
 def index(request):
-    return render(request,'index.html')
+    featured_tutors = TutorProfile.objects.filter(is_featured=True)
+    return render(request,'index.html',{'featured_tutors':featured_tutors})
 
+def api_featured_tutors(request):
+    featured_tutors = TutorProfile.objects.filter(is_featured=True)
+    tutors_data = [
+        {
+            'id': tutor.id,
+            'first_name': tutor.user.first_name,
+            'last_name': tutor.user.last_name,
+            'profile_picture': tutor.profile_picture.url if tutor.profile_picture else '',
+            'rating': getattr(tutor.user, 'profile', {}).get('rating', 'N/A'),
+            'hourly_rate': tutor.hourly_rate,
+            'location': tutor.location,
+            'profile_url': reverse('tutor_profile_view', args=[tutor.user.id]),  # Add profile URL
+        }
+        for tutor in featured_tutors
+    ]
+    return JsonResponse(tutors_data, safe=False)
 
 @tutor_required
 @login_required
@@ -54,7 +71,6 @@ def tutor_profile_edit(request):
 
     return render(request, 'tutor_profile_edit.html', {'form': form})
 
-
 @login_required
 def tutor_profile_view(request, pk):
     # Get the user
@@ -73,6 +89,7 @@ def tutor_profile_view(request, pk):
     return render(request, 'tutor_profile_view.html', context)
 
 @login_required
+@student_required
 def tutor_search(request):
     # Create an initial query set of all tutors
     tutors = TutorProfile.objects.all()
