@@ -22,6 +22,7 @@ class TutorProfile(models.Model):
     subjects = models.TextField(blank=True, null=True)
     qualifications = models.TextField(blank=True, null=True)
     availability = models.TextField(blank=True, null=True)
+    works_at = models.TextField(blank=True, null=True)
     profile_picture = models.ImageField(
         upload_to="tutor_profiles/", 
         default="tutor_profiles/default.png",
@@ -30,3 +31,16 @@ class TutorProfile(models.Model):
 
     def __str__(self):
         return f"{self.user.username}'s Profile"
+    
+    def average_rating(self):
+        return self.reviews.aggregate(Avg('rating'))['rating__avg'] or 0
+
+class Review(models.Model):
+    tutor = models.ForeignKey(TutorProfile,on_delete=models.CASCADE, related_name="reviews")
+    student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="student_reviews")
+    rating = models.PositiveIntegerField()  # Assuming a scale of 1-5
+    comment = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Review by {self.student.user.username} for {self.tutor.user.username}"

@@ -1,40 +1,53 @@
+
 {% extends "base.html" %}
 
+{% load static %}
 {% block content %}
 <div class="container">
     <div class="row justify-content-start">
         <div class="col-4">
             {% if tutor_profile.profile_picture %}
-            <img src="{{ tutor_profile.profile_picture.url }}" alt="{{ tutor_profile.user.username }}'s Profile Picture" class="img-fluid" style="max-width: 350px;">
-        {% else %}
-            <p>No profile picture available</p>
-        {% endif %}
+            <img src="{{ tutor_profile.profile_picture.url }}" alt="{{ tutor_profile.user.username }}'s Profile Picture" class="img-fluid" style="max-width:110%; padding-top: 7%; padding-right: 10%;">
+            {% else %}
+                <p>No profile picture available</p>
+            {% endif %}
+            </div>
+            <div class="col-4" style="padding-top: 5%;">
+
+            <h1>{{ tutor_profile.user.username }}</h1>
+
+                <h4><strong> <img src="{% static 'images/location.svg' %}" alt="Location Icon" style="width: 6%; height: auto;"></strong> {{ tutor_profile.location }}</h4>
+
+                {% if tutor_profile.is_online or tutor_profile.is_in_person %}
+                <h4>
+                    <img src="{% static 'images/onlineinperson.svg' %}" alt="Person Icon" style="width: 9%; height: auto;">
+                    <strong>{% if tutor_profile.is_online %}Online{% endif %}</strong>
+                    {% if tutor_profile.is_online and tutor_profile.is_in_person %} and {% endif %}
+                    <strong>{% if tutor_profile.is_in_person %}In-Person{% endif %}</strong>
+                </h4>
+                {% endif %}
+
+                {% if request.user == tutor_profile.user %}
+                <a href="{% url 'tutor_profile_edit' %}" class="btn btn-primary">Edit Profile</a>
+                {% else %}
+                <a href="#" class="btn btn-primary">Book {{ tutor_profile.user.username }} for {{ tutor_profile.hourly_rate }}</a>
+                {% endif %}
+
+                
+                
         </div>
-        <div class="col-4">
-
-    <h1>{{ tutor_profile.user.username }}</h1>
-
-        <p><strong>Location:</strong> {{ tutor_profile.location }}</p>
-        <p><strong>Hourly Rate:</strong> ${{ tutor_profile.hourly_rate }}</p>
-        <p><strong>About Me:</strong> {{ tutor_profile.about_me }}</p>
-        <p><strong>Subjects:</strong> {{ tutor_profile.subjects }}</p>
-        <p><strong>Qualifications:</strong> {{ tutor_profile.qualifications }}</p>
-        <p><strong>Availability:</strong> {{ tutor_profile.availability }}</p>
-        {% if tutor_profile.is_online or tutor_profile.is_in_person %}
-        <p>
-            <strong>{% if tutor_profile.is_online %}Online{% endif %}</strong>
-            {% if tutor_profile.is_online and tutor_profile.is_in_person %} and {% endif %}
-            <strong>{% if tutor_profile.is_in_person %}In-Person{% endif %}</strong>
-        </p>
-        {% endif %}
-        {% if request.user == tutor_profile.user %}
-        <a href="{% url 'tutor_profile_edit' %}" class="btn btn-primary">Edit Profile</a>
-        {% endif %}
+    <hr>
     </div>
-   
-</div>
+
+    <p><strong>About Me:</strong> {{ tutor_profile.about_me }}</p>
+    <p><strong>Subjects:</strong> {{ tutor_profile.subjects }}</p>
+    <p><strong>Qualifications:</strong> {{ tutor_profile.qualifications }}</p>
+    <p><strong>Availability:</strong> {{ tutor_profile.availability }}</p>
+  
+
 
 </div>
+
 
 
 {% endblock %}
