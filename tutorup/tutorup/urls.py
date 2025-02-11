@@ -6,6 +6,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 
+
 urlpatterns = [
     # Admin panel
     path('admin/', admin.site.urls),
@@ -27,4 +28,5 @@ urlpatterns = [
     path('api/featured-tutors', views.api_featured_tutors, name='api_featured_tutors'),
     # Search
     path('search/', views.tutor_search, name='tutor_search'),
+    path('review/delete/<int:review_id>/', views.delete_review, name='delete_review'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

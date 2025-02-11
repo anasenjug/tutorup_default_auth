@@ -48,6 +48,36 @@
 
 </div>
 
+<hr>
+<h3>Reviews</h3>
+<p><strong>Average Rating:</strong> {{ tutor_profile.average_rating|floatformat:1 }} / 5</p>
 
+{% for review in reviews.all %}
+    <div class="review">
+        <p><strong>{{ review.student.username }}</strong> ({{ review.created_at|date:"M d, Y" }})</p>
+        <p>Rating: ⭐{{ review.rating }}</p>
+        <p>{{ review.comment }}</p>
+        {% if request.user == review.student %}
+            <form method="post" action="{% url 'delete_review' review.id %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+            </form>
+        {% endif %}
+        <hr>
+    </div>
+{% empty %}
+    <p>No reviews yet.</p>
+{% endfor %}
+
+{% if request.user.is_authenticated and request.user.user_type == 'student' %}
+    <h3>Leave a Review</h3>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Submit Review</button>
+    </form>
+{% else %}
+    <p><a href="{% url 'login' %}">Log in</a> as a student to leave a review.</p>
+{% endif %}
 
 {% endblock %}

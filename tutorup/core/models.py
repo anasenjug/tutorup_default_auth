@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.conf import settings
+from django.db.models import Avg
 
 class CustomUser(AbstractUser):
     USER_TYPE_CHOICES = (

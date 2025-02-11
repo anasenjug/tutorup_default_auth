@@ -83,10 +83,34 @@ def tutor_profile_view(request, pk):
         # If the profile was created, you can set default values or redirect if necessary
         tutor_profile.save()
 
+    reviews = tutor_profile.reviews.all()
+    form = ReviewForm()
+    if request.method == "POST":
+            form = ReviewForm(request.POST)
+            if form.is_valid():
+                review = form.save(commit=False)
+                review.student = request.user
+                review.tutor = tutor_profile
+                review.save()
+                return redirect('tutor_profile_view', pk=pk)
+    
     context = {
         'tutor_profile': tutor_profile,
+        'reviews' : reviews,
+        'form' : form
     }
+
     return render(request, 'tutor_profile_view.html', context)
+
+@login_required
+def delete_review(request, review_id):
+    review = get_object_or_404(Review, id=review_id)
+
+    # Ensure only the author can delete their review
+    if request.user == review.student:
+        review.delete()
+
+    return redirect('tutor_profile_view', pk=review.tutor.user.pk)  # Redirect back to tutor profile
 
 @login_required
 @student_required
@@ -152,3 +176,4 @@ def tutor_search(request):
         # Otherwise, render the full page
         context['form'] = TutorSearchForm(request.GET)
         return render(request, 'tutor_search.html', context)
+    
