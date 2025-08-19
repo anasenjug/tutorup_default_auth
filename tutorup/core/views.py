@@ -14,7 +14,7 @@ def student_register(request):
         form = StudentRegistrationForm(request.POST)
         if form.is_valid():
             form.save()
-            return JsonResponse({'success': 'Registration successful!'}, status=200)
+            return redirect('login')
         return render(request, {'form': form}, status=400)
 
     # Render form as a partial for htmx
