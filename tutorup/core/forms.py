@@ -31,7 +31,7 @@ class TutorProfileForm(forms.ModelForm):
     class Meta:
         model = TutorProfile
         fields = [
-            'location', 'is_online', 'is_in_person', 'hourly_rate',
+            'first_name','last_name','location', 'is_online', 'is_in_person', 'hourly_rate',
             'about_me', 'subjects', 'qualifications', 'availability', 'profile_picture'
         ]
         widgets = {

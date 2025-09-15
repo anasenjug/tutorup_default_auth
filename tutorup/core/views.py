@@ -8,12 +8,14 @@ from django.http import Http404
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import JsonResponse
+from django.contrib import messages
 
 def student_register(request):
     if request.method == 'POST':
         form = StudentRegistrationForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request,"You've succesfully registered! You can proceed to Login now.")
             return redirect('login')
         return render(request, {'form': form}, status=400)
 
@@ -41,10 +43,10 @@ def api_featured_tutors(request):
     tutors_data = [
         {
             'id': tutor.id,
-            'first_name': tutor.user.first_name,
-            'last_name': tutor.user.last_name,
+            'first_name': tutor.first_name,
+            'last_name': tutor.last_name,
             'profile_picture': tutor.profile_picture.url if tutor.profile_picture else '',
-            'rating': getattr(tutor.user, 'profile', {}).get('rating', 'N/A'),
+            'rating': round(tutor.average_rating, 1) if tutor.average_rating else 'N/A',
             'hourly_rate': tutor.hourly_rate,
             'location': tutor.location,
             'profile_url': reverse('tutor_profile_view', args=[tutor.user.id]),  # Add profile URL

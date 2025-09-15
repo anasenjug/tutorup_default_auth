@@ -15,7 +15,7 @@
             <div class="col-4" style="padding-top: 5%;">
 
             <h1>{{ tutor_profile.user.username }}</h1>
-
+            <h2>{{ tutor_profile.first_name }}  {{ tutor_profile.last_name }}</h2>
                 <h4><strong> <img src="{% static 'images/location.svg' %}" alt="Location Icon" style="width: 6%; height: auto;"></strong> {{ tutor_profile.location }}</h4>
 
                 {% if tutor_profile.is_online or tutor_profile.is_in_person %}

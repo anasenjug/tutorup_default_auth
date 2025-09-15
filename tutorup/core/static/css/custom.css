@@ -1,0 +1,25 @@
+
+:root {
+    --bs-tudarkblue: #365295;
+    --bs-tumedblue: #6683D3;
+    --bs-tulightblue: #b7c5e2;
+    --bs-tuorange: #F99781;
+
+    --bs-gradient-tutlr: linear-gradient(90deg, #365295, #F99781);
+    --bs-gradient-tutud: linear-gradient(0deg, #365295, #F99781);
+}
+
+/* Color utilities */
+.bg-tudarkblue { background-color: var(--bs-tudarkblue) !important; color: #fff; }
+.bg-tumedblue { background-color: var(--bs-tumedblue) !important; color: #fff; }
+.bg-tulightblue { background-color: var(--bs-tulightblue) !important; color: #000; }
+.bg-tuorange { background-color: var(--bs-tuorange) !important; color: #000; }
+
+/* Gradient utilities */
+.bg-gradient-tutlr { background: var(--bs-gradient-tutlr) !important; color: #fff; }
+.bg-gradient-tutud { background: var(--bs-gradient-tutud) !important; color: #fff; }
+
+/* Buttons */
+.btn-tudarkblue { background-color: var(--bs-tudarkblue); color: #fff; border: none; }
+.btn-tumedblue { background-color: var(--bs-tumedblue); color: #fff; border: none; }
+.btn-tuorange { background-color: var(--bs-tuorange); color: #000; border: none; }

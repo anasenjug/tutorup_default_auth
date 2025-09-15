@@ -6,7 +6,6 @@
         position: relative; /* Ensure proper stacking */
         overflow: hidden; /* Hide overflow if necessary */
     }
-
     /* Gradient background */
     .banner::before {
         content: "";
@@ -45,6 +44,26 @@
         text-align: center; /* Center text */
     }
 
- a{
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 30px; /* space between items */
+}
+
+.footer-links .icon-container {
+    padding: 30px; /* padding inside each container */
+    display: flex; /* make sure children align properly */
+    align-items: center;
+    justify-content: center;
+}
+
+.footer-links .icon-container a {
+    color: var(--bs-tudarkblue); /* your custom color */
+    font-weight: bold;
     text-decoration: none;
- }
+    display: inline-block; /* ensures hover works properly */
+}
+
+.footer-links .icon-container a:hover {
+    color: var(--bs-tumedblue); /* change color on hover */
+}

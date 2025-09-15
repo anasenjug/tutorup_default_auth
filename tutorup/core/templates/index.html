@@ -38,7 +38,7 @@
 <script>
     var tutorProfileUrl = "{% url 'tutor_profile_view' pk=0 %}";
 </script>
-<div class="d-flex justify-content-center mt-4 " style="color:#324373; padding-bottom: 7%;">
+<div class="d-flex justify-content-center mt-4 " style="padding-bottom: 7%;">
     <div x-data="{
         tutors: [],
         loadTutors() {
@@ -52,16 +52,16 @@
         
         <h2 class="text-center" style="color: #324373;">Featured Tutors</h2>
         
-        <div class="row" x-show="tutors.length > 0">
+        <div class="row" x-show="tutors.length > 0"  >
             <template x-for="tutor in tutors" :key="tutor.id">
                 <div class="col-md-3">
-                    <div class="card" style="border: none;">
+                    <div class="card shadow-sm p-1" style="border: none; background-color: #EFF4FF;">
                         <img :src="tutor.profile_picture" alt="Tutor" class="card-img-top" style="height: 200px; object-fit: cover;">
-                        <div class="card-body">
+                        <div class="card-body" style="">
                             <h5 class="card-title" x-text="tutor.first_name + ' ' + tutor.last_name"></h5>
                             <div class="d-flex justify-content-between">
                                 <span>
-                                    <span x-text="tutor.rating"></span> ★
+                                    <span x-text="tutor.rating"></span> ⭐
                                 </span>
                                 <span>$<span x-text="tutor.hourly_rate"></span>/hr</span>
                             </div>

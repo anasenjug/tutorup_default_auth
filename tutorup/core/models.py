@@ -15,6 +15,8 @@ class CustomUser(AbstractUser):
     
 class TutorProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="tutor_profile")
+    first_name = models.CharField(max_length=50, blank = True, null = True)
+    last_name = models.CharField(max_length = 100, blank = True, null = True)
     location = models.CharField(max_length=255, blank=True, null=True)
     is_online = models.BooleanField(default=False)
     is_in_person = models.BooleanField(default=False)
@@ -33,8 +35,10 @@ class TutorProfile(models.Model):
     def __str__(self):
         return f"{self.user.username}'s Profile"
     
+    @property
     def average_rating(self):
-        return self.reviews.aggregate(Avg('rating'))['rating__avg'] or 0
+        avg = self.reviews.aggregate(Avg('rating'))['rating__avg']
+        return round(avg,1) if avg else 0
 
 class Review(models.Model):
     tutor = models.ForeignKey(TutorProfile,on_delete=models.CASCADE, related_name="reviews")
