@@ -29,4 +29,6 @@ urlpatterns = [
     # Search
     path('search/', views.tutor_search, name='tutor_search'),
     path('review/delete/<int:review_id>/', views.delete_review, name='delete_review'),
+    
+    path('about/',views.about_us, name='about_us')
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

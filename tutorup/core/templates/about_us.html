@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div x-data="{
+    active: null,
+    faqs: [
+        { id: 1, question: 'Who are we?', answer: 'We are a dedicated team of students, educators, and tech enthusiasts committed to making quality education accessible to everyone. Our platform connects learners with verified tutors who can provide personalized guidance across a wide range of subjects.' },
+        { id: 2, question: 'What do we do?', answer: 'We provide a platform for students to discover and book tutors easily, read reviews, and find the perfect match for their learning needs.' },
+        { id: 3, question: 'What is our history?', answer: 'Our story began with a simple idea: students should not struggle to find the help they need. Founded by university students, our platform grew into a trusted service connecting learners with the right tutors at the right time.' }
+    ]
+}">
+  
+  <template x-for="item in faqs" :key="item.id">
+    <div class="mb-2 border rounded">
+      <button @click="active = active === item.id ? null : item.id" 
+              class="btn btn-primary w-100 text-start d-flex justify-content-between align-items-center">
+        <span x-text="item.question"></span>
+        <span x-text="active === item.id ? '➖' : '➕'"></span>
+      </button>
+
+      <div
+        x-ref="el => $nextTick(() => { if(active === item.id) el.style.maxHeight = el.scrollHeight + 'px'; else el.style.maxHeight = '0'; })"
+        x-bind:style="active === item.id ? 'max-height:' + $refs[`panel${item.id}`]?.scrollHeight + 'px; opacity:1;' : 'max-height:0; opacity:0;'"
+        :ref="'panel' + item.id"
+        class="overflow-hidden transition-all duration-300 ease-in-out p-3"
+      >
+        <p x-text="item.answer"></p>
+      </div>
+    </div>
+  </template>
+</div>
+
+{% endblock %}

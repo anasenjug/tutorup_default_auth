@@ -55,6 +55,9 @@ def api_featured_tutors(request):
     ]
     return JsonResponse(tutors_data, safe=False)
 
+def about_us(request):
+    return render(request, 'about_us.html')
+
 @tutor_required
 @login_required
 def tutor_profile_edit(request):
