@@ -12,8 +12,13 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+import environ
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+#initialize environ and read .env file
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR,".env"))
 
 
 # Quick-start development settings - unsuitable for production
@@ -27,10 +32,19 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+#Email config
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+
+EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 
 # Application definition
 LOGIN_REDIRECT_URL = '/login/'
 LOGOUT_REDIRECT_URL = '/'
+
 
 
 INSTALLED_APPS = [

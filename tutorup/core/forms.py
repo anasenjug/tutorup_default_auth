@@ -60,3 +60,9 @@ class ReviewForm(forms.ModelForm):
             'rating': forms.NumberInput(attrs={'min': 1, 'max': 5}),
             'comment': forms.Textarea(attrs={'rows': 3}),
         }
+        
+class ContactForm(forms.Form):
+    name = forms.CharField(max_length=100)
+    email = forms.EmailField()
+    subject = forms.CharField(max_length=150)
+    message = forms.CharField(widget=forms.Textarea)

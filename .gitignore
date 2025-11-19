@@ -13,3 +13,5 @@ src/*.egg-info
 lib
 lib64
 db.sqlite3
+.env
+core/.env

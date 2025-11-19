@@ -9,6 +9,8 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import JsonResponse
 from django.contrib import messages
+from django.core.mail import send_mail
+
 
 def student_register(request):
     if request.method == 'POST':
@@ -182,3 +184,36 @@ def tutor_search(request):
         context['form'] = TutorSearchForm(request.GET)
         return render(request, 'tutor_search.html', context)
     
+
+def contact_us(request):
+    sent = False
+
+    if request.method == "POST":
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data["name"]
+            email = form.cleaned_data["email"]
+            subject = form.cleaned_data["subject"]
+            message = form.cleaned_data["message"]
+
+            email_body = (
+                f"New message from your website contact form:\n\n"
+                f"Name: {name}\n"
+                f"Email: {email}\n"
+                f"Subject: {subject}\n\n"
+                f"Message:\n{message}"
+            )
+
+            send_mail(
+                subject=f"📩 Message from: {name}",
+                message=email_body,
+                from_email=settings.EMAIL_HOST_USER,
+                recipient_list=[settings.EMAIL_HOST_USER],
+            )
+
+            sent = True
+    else:
+        form = ContactForm()  # Create empty form for GET
+
+    # Always return a response
+    return render(request, "contact_us.html", {"form": form, "sent": sent})

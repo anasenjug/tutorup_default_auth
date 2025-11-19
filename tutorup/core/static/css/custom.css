@@ -23,3 +23,8 @@
 .btn-tudarkblue { background-color: var(--bs-tudarkblue); color: #fff; border: none; }
 .btn-tumedblue { background-color: var(--bs-tumedblue); color: #fff; border: none; }
 .btn-tuorange { background-color: var(--bs-tuorange); color: #000; border: none; }
+
+.text-tudarkblue { color: var(--bs-tudarkblue) !important; }
+.text-tumedblue { color: var(--bs-tumedblue) !important; }
+.text-tulightblue { color: var(--bs-tulightblue) !important; }
+.text-tuorange { color: var(--bs-tuorange) !important; }

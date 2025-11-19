@@ -1,0 +1,18 @@
+
+{# todo: make it pretty #}
+
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+{# Todo: on successful sent form, display success message that hides the form (to prevent spamming a little) #}
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Send</button>
+</form>
+
+{% endblock %}
+

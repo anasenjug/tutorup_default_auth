@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser  # Import only CustomUser
+from .models import CustomUser 
 from .models import TutorProfile
 
 @admin.register(CustomUser)
