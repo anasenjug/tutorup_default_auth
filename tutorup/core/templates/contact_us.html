@@ -1,18 +1,69 @@
-
-{# todo: make it pretty #}
-
-{% extends 'base.html' %}
-
+{% extends "base.html" %}
 {% load static %}
 
 {% block content %}
 
-{# Todo: on successful sent form, display success message that hides the form (to prevent spamming a little) #}
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Send</button>
-</form>
+<div class="container mt-5">
+    <div class="card" style="background: white; border-radius: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); padding: 40px; max-width: 800px; margin: auto;">
+
+        <div class="card-title text-center mb-4">
+            <h1>Contact Us</h1>
+        </div>
+
+        <div class="card-body">
+            <div id="contact-form-wrapper">
+                {% include "partials/contact_form.html" %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Reuse card-title styling for H1 */
+.card-title {
+    color: #365295;
+    font-size: 32px;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Form inputs styling */
+#contact-form-wrapper input,
+#contact-form-wrapper textarea,
+#contact-form-wrapper select {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: 1px solid #6683D3; /* --bs-tumedblue */
+    font-size: 15px;
+}
+
+#contact-form-wrapper label {
+    display: block;
+    font-weight: bold;
+    color: #365295; /* --bs-tudarkblue */
+    margin-bottom: 5px;
+}
+
+#contact-form-wrapper button {
+    width: 180px;
+    padding: 12px;
+    background: #F99781; /* --bs-tuorange */
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 30px;
+    font-size: 18px;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+/* Optional: error styling */
+#contact-form-wrapper .error {
+    color: red;
+    font-size: 13px;
+}
+</style>
 
 {% endblock %}
-

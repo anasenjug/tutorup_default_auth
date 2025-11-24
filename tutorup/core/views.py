@@ -187,10 +187,14 @@ def tutor_search(request):
 
 def contact_us(request):
     sent = False
+    form = ContactForm()
 
     if request.method == "POST":
+        
         form = ContactForm(request.POST)
+        
         if form.is_valid():
+            # collect and clean data
             name = form.cleaned_data["name"]
             email = form.cleaned_data["email"]
             subject = form.cleaned_data["subject"]
@@ -212,8 +216,16 @@ def contact_us(request):
             )
 
             sent = True
-    else:
-        form = ContactForm()  # Create empty form for GET
+            form = ContactForm()  # reset form upon success
+        
+        # return the htmx partial 
+        if request.htmx:
+            return render(request, "partials/contact_form.html", {
+                "form": form,
+                "sent": sent
+            })
 
-    # Always return a response
-    return render(request, "contact_us.html", {"form": form, "sent": sent})
+    return render(request, "contact_us.html", {
+        "form": form,
+        "sent": sent
+    })

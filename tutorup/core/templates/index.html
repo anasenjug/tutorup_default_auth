@@ -18,12 +18,10 @@
                     </div>
                 </div>
             </div>
-          
         </template>
-        
     </div>
-   
 </div>
+
 {% endblock %}
 
 
@@ -55,7 +53,7 @@
     }" x-init="loadTutors()" class="container mt-5">
         
         <h2 class="text-center" style="color: #324373;">Featured Tutors</h2>
-        
+        {# todo: make showcased tutor cards fit the contact and about us cards #}
         <div class="row" x-show="tutors.length > 0"  >
             <template x-for="tutor in tutors" :key="tutor.id">
                 <div class="col-md-3">

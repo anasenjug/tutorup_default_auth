@@ -1,38 +1,73 @@
-{# todo: make it pretty #}
-
-{% extends 'base.html' %}
-
-{% load static %}
+{% extends "base.html" %}
 
 {% block content %}
+<div class="container py-5">
+    <!-- Use the same card-title class for the H1 -->
+    <h1 class="card-title mb-4 text-center">About Us FAQ</h1>
+    
+    <div x-data="{ activeQuestion: null }">
+        <!-- Question 1 -->
+        <div class="faq-card mb-3" @click="activeQuestion === 1 ? activeQuestion = null : activeQuestion = 1">
+            <div class="faq-header p-3">
+                <h5 class="mb-0">Who are we?</h5>
+            </div>
+            <div x-show="activeQuestion === 1" x-transition class="faq-answer bg-white p-3">
+                <p>We are a passionate team dedicated to delivering high-quality software solutions tailored to your needs. Our mission is to simplify technology for everyone.</p>
+            </div>
+        </div>
 
-<div x-data="{
-    active: null,
-    faqs: [
-        { id: 1, question: 'Who are we?', answer: 'We are a dedicated team of students, educators, and tech enthusiasts committed to making quality education accessible to everyone. Our platform connects learners with verified tutors who can provide personalized guidance across a wide range of subjects.' },
-        { id: 2, question: 'What do we do?', answer: 'We provide a platform for students to discover and book tutors easily, read reviews, and find the perfect match for their learning needs.' },
-        { id: 3, question: 'What is our history?', answer: 'Our story began with a simple idea: students should not struggle to find the help they need. Founded by university students, our platform grew into a trusted service connecting learners with the right tutors at the right time.' }
-    ]
-}">
-  
-  <template x-for="item in faqs" :key="item.id">
-    <div class="mb-2 border rounded">
-      <button @click="active = active === item.id ? null : item.id" 
-              class="btn btn-primary w-100 text-start d-flex justify-content-between align-items-center">
-        <span x-text="item.question"></span>
-        <span x-text="active === item.id ? '➖' : '➕'"></span>
-      </button>
+        <!-- Question 2 -->
+        <div class="faq-card mb-3" @click="activeQuestion === 2 ? activeQuestion = null : activeQuestion = 2">
+            <div class="faq-header p-3">
+                <h5 class="mb-0">What do we do?</h5>
+            </div>
+            <div x-show="activeQuestion === 2" x-transition class="faq-answer bg-white p-3">
+                <p>We provide innovative digital solutions, including web development, IT consulting, and support services, ensuring your business stays ahead in the digital landscape.</p>
+            </div>
+        </div>
 
-      <div
-        x-ref="el => $nextTick(() => { if(active === item.id) el.style.maxHeight = el.scrollHeight + 'px'; else el.style.maxHeight = '0'; })"
-        x-bind:style="active === item.id ? 'max-height:' + $refs[`panel${item.id}`]?.scrollHeight + 'px; opacity:1;' : 'max-height:0; opacity:0;'"
-        :ref="'panel' + item.id"
-        class="overflow-hidden transition-all duration-300 ease-in-out p-3"
-      >
-        <p x-text="item.answer"></p>
-      </div>
+        <!-- Question 3 -->
+        <div class="faq-card mb-3" @click="activeQuestion === 3 ? activeQuestion = null : activeQuestion = 3">
+            <div class="faq-header p-3">
+                <h5 class="mb-0">Why choose us?</h5>
+            </div>
+            <div x-show="activeQuestion === 3" x-transition class="faq-answer bg-white p-3">
+                <p>Our team combines technical expertise with a deep understanding of client needs, ensuring solutions that are not only functional but also user-friendly and scalable.</p>
+            </div>
+        </div>
+
+        <!-- Question 4 -->
+        <div class="faq-card mb-3" @click="activeQuestion === 4 ? activeQuestion = null : activeQuestion = 4">
+            <div class="faq-header p-3">
+                <h5 class="mb-0">How can you contact us?</h5>
+            </div>
+            <div x-show="activeQuestion === 4" x-transition class="faq-answer bg-white p-3">
+                <p>You can reach us via our <a href="mailto:contact@company.com">email</a> or through our social media channels. We’re always happy to hear from you!</p>
+            </div>
+        </div>
     </div>
-  </template>
 </div>
 
+<style>
+    /* Reuse the card-title H1 styling */
+    .card-title {
+        color: #365295;
+        font-size: 50px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .faq-header {
+        color: var(--bs-tudarkblue);
+        cursor: pointer;
+    }
+    .faq-card {
+        border: 1px solid var(--bs-tudarkblue);
+        border-radius: 10px;
+        transition: box-shadow 0.3s;
+    }
+    .faq-card:hover {
+        box-shadow: 0 4px 20px rgba(54, 82, 149, 0.3);
+    }
+</style>
 {% endblock %}

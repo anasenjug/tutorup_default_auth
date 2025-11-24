@@ -1,0 +1,36 @@
+<div 
+    x-data="{ sent: {{ sent|yesno:'true,false' }} }"
+    x-cloak
+>
+
+    <!-- Success message -->
+    <div 
+        x-show="sent" 
+        x-transition.opacity.duration.300ms
+        class="alert bg-tumedblue text-white rounded-3 p-4 text-center shadow-sm"
+    >
+        <h4 class="mb-2">Message sent successfully! 🎉</h4>
+        <p>Thanks for contacting us — we’ll get back to you soon.</p>
+    </div>
+
+    <!-- Contact form -->
+    <form
+        x-show="!sent"
+        x-transition.opacity.duration.200ms
+        hx-post="{% url 'contact_us' %}"
+        hx-target="#contact-form-wrapper"
+        hx-swap="outerHTML"
+        class="mt-3"
+    >
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button 
+            type="submit" 
+            class="btn btn-tudarkblue w-100 mt-3 py-2 rounded-3 shadow-sm"
+        >
+            Send Message
+        </button>
+    </form>
+
+</div>
