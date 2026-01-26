@@ -5,8 +5,6 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 
-
-
 urlpatterns = [
     # Admin panel
     path('admin/', admin.site.urls),
