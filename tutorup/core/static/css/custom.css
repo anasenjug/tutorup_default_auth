@@ -1,8 +1,8 @@
 
 :root {
-    --bs-tudarkblue: #365295;
+    --bs-tudarkblue: #324373;
     --bs-tumedblue: #6683D3;
-    --bs-tulightblue: #b7c5e2;
+    --bs-tulightblue:#EFF4FF;
     --bs-tuorange: #F99781;
 
     --bs-gradient-tutlr: linear-gradient(90deg, #365295, #F99781);
@@ -20,11 +20,69 @@
 .bg-gradient-tutud { background: var(--bs-gradient-tutud) !important; color: #fff; }
 
 /* Buttons */
-.btn-tudarkblue { background-color: var(--bs-tudarkblue); color: #fff; border: none; }
-.btn-tumedblue { background-color: var(--bs-tumedblue); color: #fff; border: none; }
-.btn-tuorange { background-color: var(--bs-tuorange); color: #000; border: none; }
+.btn-tudarkblue { 
+    background-color: var(--bs-tudarkblue); 
+    color: #fff; 
+    border: 2px solid var(--bs-tudarkblue); 
+    transition: all 0.25s ease-in-out;
+}
+.btn-tudarkblue:hover {
+    color: var(--bs-tudarkblue) !important;
+}
+.btn-tumedblue { 
+    background-color: var(--bs-tumedblue);
+    color: #ffffff;
+    border: 2px solid var(--bs-tumedblue);
+    transition: all 0.25s ease-in-out;
+}
+
+.btn-tumedblue:hover {
+    color: var(--bs-tumedblue) !important;
+}
+
+.btn-tuorange {
+    background-color: var(--bs-tuorange);
+    color: #000000;
+    border: 2px solid var(--bs-tuorange);
+    transition: all 0.25s ease-in-out;
+}
+
+.btn-tuorange:hover {
+    color: var(--bs-tuorange) !important;
+}
 
 .text-tudarkblue { color: var(--bs-tudarkblue) !important; }
 .text-tumedblue { color: var(--bs-tumedblue) !important; }
 .text-tulightblue { color: var(--bs-tulightblue) !important; }
 .text-tuorange { color: var(--bs-tuorange) !important; }
+
+/* Custom App-Specific Structural Layouts */
+
+/* Fluid UI Control for the Welcome/Join Button */
+.btn-join-us {
+    min-width: 200px;
+    max-width: 100%;
+    transition: transform 0.2s ease-in-out;
+}
+.btn-join-us:hover {
+    transform: scale(1.03);
+}
+
+/* Specific Card Layout Control */
+.card-tutor {
+    background-color: #EFF4FF !important; /* Soft card tint fallback */
+}
+
+/* Enforcing strict scaling controls for dynamic profile pictures */
+.card-tutor-img {
+    height: 200px;
+    object-fit: cover;
+}
+
+/* Reusable structural utility class for small inline iconography */
+.icon-inline {
+    width: 14px;
+    height: 14px;
+    vertical-align: middle;
+    display: inline-block;
+}
