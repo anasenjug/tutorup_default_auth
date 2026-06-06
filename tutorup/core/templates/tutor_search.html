@@ -1,15 +1,38 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-<form 
-    hx-get="{% url 'tutor_search' %}" 
-    hx-target="#search-results" 
-    hx-swap="outerHTML">
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Search</button>
-</form>
+<div class="container-fluid py-4">
+    <!-- Bootstrap Row wrapper creates the side-by-side flex grid -->
+    <div class="row g-4">
+        
+        <!-- Left Column: Search Filter Form (Takes up 3/12 parts of width) -->
+        <div class="col-md-3">
+            <div class="card shadow-sm p-4" style="background-color: #f8f9fa; border: none; border-radius: 8px;">
+                <h5 class="mb-3" style="color: #324373; font-weight: bold;">Filter Tutors</h5>
+                <form 
+                    hx-get="{% url 'tutor_search' %}" 
+                    hx-target="#search-results" 
+                    hx-swap="outerHTML">
+                    
+                    <!-- Renders your form fields cleanly -->
+                    <div class="mb-3">
+                        {{ form.as_p }}
+                    </div>
+                    
+                    <button type="submit" class="btn text-white w-100 fw-semibold" style="background-color: #324373; border-radius: 20px;">
+                        Apply Filters
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Right Column: Results Container (Takes up 9/12 parts of width) -->
+        <div class="col-md-9">
+            <!-- Initially includes the results partial structure -->
+            {% include "partials/tutor_search_results.html" %}
+        </div>
 
-<!-- initially render results -->
-{% include "partials/tutor_search_results.html" %}
-
+    </div>
+</div>
 {% endblock %}

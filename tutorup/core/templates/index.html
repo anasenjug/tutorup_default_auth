@@ -40,7 +40,8 @@
 <script>
     var tutorProfileUrl = "{% url 'tutor_profile_view' pk=0 %}";
 </script>
-<div class="d-flex justify-content-center mt-4 " style="padding-bottom: 7%;">
+<div class="d-flex justify-content-center mt-4 mb-5" style="padding-bottom: 7%;">
+    <!-- Alpine Component Root Container -->
     <div x-data="{
         tutors: [],
         loadTutors() {
@@ -52,55 +53,78 @@
         }
     }" x-init="loadTutors()" class="container mt-5">
         
-        <h2 class="text-center" style="color: #324373;">Featured Tutors</h2>
-        {# todo: make showcased tutor cards fit the contact and about us cards #}
-        <div class="row" x-show="tutors.length > 0"  >
+        <h2 class="text-center mb-4" style="color: #324373; font-weight: bold;">Featured Tutors</h2>
+        
+        <!-- Small Vertical Cards Grid Structure -->
+        <div class="row g-4" x-show="tutors.length > 0">
             <template x-for="tutor in tutors" :key="tutor.id">
                 <div class="col-md-3">
-                    <div class="card shadow-sm p-1" style="border: none; background-color: #EFF4FF;">
-                        <img :src="tutor.profile_picture" alt="Tutor" class="card-img-top" style="height: 200px; object-fit: cover;">
-                        <div class="card-body" style="">
-                            <h5 class="card-title" x-text="tutor.first_name + ' ' + tutor.last_name"></h5>
-                            <div class="d-flex justify-content-between">
-                                <span>
-                                    <span x-text="tutor.rating"></span> ⭐
+                    
+                    <!-- Vertical Card Wrapper -->
+                    <div class="card shadow-sm p-0 h-100 position-relative overflow-hidden" style="border: none; background-color: #EFF4FF; border-radius: 8px;">
+                        
+                        <!-- Top Image Block -->
+                        <img :src="tutor.profile_picture || 'https://placeholder.com'" 
+                             :alt="tutor.first_name + ' profile picture'" 
+                             class="card-img-top" 
+                             style="height: 200px; object-fit: cover;">
+                        
+                        <!-- Card Body Details -->
+                        <div class="card-body p-3 d-flex flex-column">
+                            
+                            <h5 class="card-title mb-1 fw-bold" style="color: #324373;"
+                                x-text="tutor.first_name + ' ' + (tutor.last_name ? tutor.last_name.charAt(0) + '.' : '')">
+                            </h5>
+                            
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div class="d-flex align-items-center gap-1 text-muted small">
+                                    <span class="fw-bold text-dark" x-text="tutor.rating || '0.0'"></span>
+                                    <span x-text="'(' + (tutor.review_count || 0) + ')'"></span>
+                                    <span style="color: #FFC107;">
+                                        <!-- Inline width/height styles enforce strict scaling controls -->
+                                        <img src="{% static 'images/star.svg' %}" alt="star icon" style="width: 14px; height: 14px; vertical-align: middle;">
+                                    </span>
+                                </div>
+                                <span class="fw-bold small" style="color: #324373;">
+                                    $<span x-text="tutor.hourly_rate || 0"></span>/hr
                                 </span>
-                                <span>$<span x-text="tutor.hourly_rate"></span>/hr</span>
                             </div>
-                            <p class="card-text" x-text="tutor.location"></p>
-                            <!-- Use the profile_url directly -->
-                            <a :href="tutor.profile_url">Learn More</a>
+                            
+                            <p class="card-text text-muted small mb-3">
+                                <img src="{% static 'images/location.svg' %}" alt="location icon" style="width: 14px; height: 14px; vertical-align: middle;"> <span x-text="tutor.location || 'Online'"></span>
+                            </p>
+                            
+                            <!-- Bottom Action Center Layout -->
+                            <div class="d-flex flex-column gap-2 mt-auto">
+                                <a :href="tutor.profile_url" class="btn btn-sm py-2 fw-semibold text-white text-decoration-none text-center" style="background-color: #324373; border: none; border-radius: 20px;">
+                                    Learn more
+                                </a>
+                            </div>
+                            
                         </div>
                     </div>
+                    
                 </div>
             </template>
         </div>
 
+        <!-- Empty State Container -->
         <div x-show="tutors.length == 0" class="text-center mt-3">
-            <p>No featured tutors available at the moment.</p>
+            <p class="text-muted">No featured tutors available at the moment.</p>
         </div>
     </div>
+</div>
 
   
 </div>
-<a class="d-flex justify-content-center" href="{% url 'tutor_search' %}"><h2>Find more here <img src="{% static 'images/more.svg' %}" alt="more button" style="padding:10px;"></h2></a>
-
-<div class="d-flex justify-content-center">
-
-    <div class="col-md-3">
-        <h3 style="text-align: center; color:#324373;">Let us help you find the perfect tutor for 
-            you or your loved ones.</h3>
-
+  
+        <h3 style="text-align: center;">Let us help you find the perfect tutor.</h3>
             {# Using Django for the check whether to render this div because the hidden content doesn't present in the page's HTML #}
             <div class="d-flex justify-content-center" >
-                {% if user.is_authenticated and user.user_type == 'student' %}
-                <a href="{% url 'tutor_search' %}" class="btn orangebtn" style="background-color: #F99781 !important; color: white !important; padding: 15px; border-radius: 30px;">
-                    <h3>Find a tutor</h3>
-                </a>
-                {% endif %}
-               
+                <a class="d-flex justify-content-center" href="{% url 'tutor_search' %}"><h2>Find more<img src="{% static 'images/more.svg' %}" alt="more button" style="padding:10px;"></h2></a>
             </div>
-    </div>
+  
+<div class="d-flex justify-content-center">
     <img src="{% static 'images/deco_img.svg' %}" alt="lady sitting on computer">
 </div>
 {% endblock %}

@@ -39,6 +39,10 @@ class TutorProfile(models.Model):
     def average_rating(self):
         avg = self.reviews.aggregate(Avg('rating'))['rating__avg']
         return round(avg,1) if avg else 0
+    
+    @property
+    def review_count(self):
+        return self.reviews.count()
 
 class Review(models.Model):
     tutor = models.ForeignKey(TutorProfile,on_delete=models.CASCADE, related_name="reviews")

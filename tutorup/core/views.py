@@ -49,6 +49,7 @@ def api_featured_tutors(request):
             'last_name': tutor.last_name,
             'profile_picture': tutor.profile_picture.url if tutor.profile_picture else '',
             'rating': round(tutor.average_rating, 1) if tutor.average_rating else 'N/A',
+            'review_count': tutor.review_count,
             'hourly_rate': tutor.hourly_rate,
             'location': tutor.location,
             'profile_url': reverse('tutor_profile_view', args=[tutor.user.id]),  # Add profile URL
@@ -80,35 +81,38 @@ def tutor_profile_edit(request):
 
 @login_required
 def tutor_profile_view(request, pk):
-    # Get the user
-    user = get_object_or_404(get_user_model(), pk=pk, user_type='tutor')
+    # Safely pull the profile along with its related user field setup
+    tutor_profile = get_object_or_404(TutorProfile.objects.select_related('user'), pk=pk)
 
-    # Get or create the TutorProfile
-    tutor_profile, created = TutorProfile.objects.get_or_create(user=user)
+    # Safety filter line check
+    if getattr(tutor_profile.user, 'user_type', None) != 'tutor':
+        raise Http404("This profile does not belong to a valid tutor.")
 
-    if created:
-        # If the profile was created, you can set default values or redirect if necessary
-        tutor_profile.save()
-
+    # Pull associated model records list variables cleanly
     reviews = tutor_profile.reviews.all()
-    form = ReviewForm()
+
+    # Handle form handling branches explicitly
     if request.method == "POST":
-            form = ReviewForm(request.POST)
-            if form.is_valid():
-                review = form.save(commit=False)
-                review.student = request.user
-                review.tutor = tutor_profile
-                review.save()
-                return redirect('tutor_profile_view', pk=pk)
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.student = request.user
+            review.tutor = tutor_profile.user  # Direct CustomUser assignment
+            review.save()
+            return redirect('tutor_profile_view', pk=pk)
+    else:
+        # Instantiates a fresh blank form for default GET page loads
+        form = ReviewForm()
     
+    # 5. Build context mapping dictionaries
     context = {
         'tutor_profile': tutor_profile,
-        'reviews' : reviews,
-        'form' : form
+        'reviews': reviews,
+        'form': form
     }
 
     return render(request, 'tutor_profile_view.html', context)
-
+        
 @login_required
 def delete_review(request, review_id):
     review = get_object_or_404(Review, id=review_id)
@@ -123,7 +127,7 @@ def delete_review(request, review_id):
 @student_required
 def tutor_search(request):
     # Create an initial query set of all tutors
-    tutors = TutorProfile.objects.all()
+    tutors = TutorProfile.objects.select_related('user').prefetch_related('reviews')
 
     # Handle search query parameter for general search (across multiple fields)
     query = request.GET.get('q', None)
@@ -167,13 +171,21 @@ def tutor_search(request):
 
     # Pagination
     tutors = tutors.order_by('user__username')  # or any order you prefer
-    paginator = Paginator(tutors, 10)  # 10 tutors per page
+    paginator = Paginator(tutors, 3)  # 3 tutors per page
     page_number = request.GET.get('page')
     tutors_page = paginator.get_page(page_number)
+
+    #Extract and preserve query parameters for the template pagination button
+    get_copy = request.GET.copy()
+    if 'page' in get_copy:
+        del get_copy['page']
+    query_params = get_copy.urlencode()
+
 
     context = {
         'form': TutorSearchForm(request.GET),  # Include the search form with current query params
         'tutors': tutors_page,
+        'query_params': query_params,
     }
 
     if request.htmx:
