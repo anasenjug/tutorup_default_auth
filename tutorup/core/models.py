@@ -53,3 +53,37 @@ class Review(models.Model):
 
     def __str__(self):
         return f"Review by {self.student.user.username} for {self.tutor.user.username}"
+    
+class BookingRequest(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+    ]
+
+    EDUCATION_CHOICES = [
+        ('middle_school','Middle School'),
+        ('high_school','High School'),
+        ('college', 'College'),
+        ('graduate_school', 'Graduate School'),
+        ('other', 'Other'),
+    ]
+
+    student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='bookings_sent')
+    tutor_profile = models.ForeignKey('TutorProfile', on_delete=models.CASCADE, related_name='bookings_received')
+
+    description = models.TextField()
+    education_level = models.CharField(max_length=30, choices = EDUCATION_CHOICES)
+    rate_at_booking = models.DecimalField(max_digits=6, decimal_places=2)
+
+    status = models.CharField(max_length = 15, choices = STATUS_CHOICES, default='pending')
+    rejection_reason = models.TextField(blank=True, null=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"Booking from {self.student.username} to Tutor {self.tutor_profile.user.username} ({self.status})" 

@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from .models import *
 from .utils import *
 from django.contrib.auth import logout, get_user_model
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import JsonResponse
@@ -282,3 +282,96 @@ def contact_us(request):
         "sent": sent
     })
 
+@login_required
+def create_booking_request(request, tutor_user_id):
+    tutor_profile = get_object_or_404(TutorProfile, user__pk=tutor_user_id)
+    
+    if request.method == 'POST':
+        form = BookingRequestForm(request.POST)
+        if form.is_valid():
+            booking = form.save(commit=False)
+            booking.student = request.user
+            booking.tutor_profile = tutor_profile
+            booking.rate_at_booking = tutor_profile.hourly_rate  
+            booking.status = 'pending'
+            booking.save()
+            
+            messages.success(request, "Your booking request has been sent successfully!")
+            
+            if request.headers.get('HX-Request'):
+                response = HttpResponse()
+                response['HX-Trigger'] = 'bookingSuccess' # Signal sent to front-end
+                return response
+                
+            return redirect('dashboard')
+    
+    return redirect('tutor_profile_view', pk=tutor_user_id)
+
+
+@login_required
+def respond_to_booking(request, booking_id):
+    # Ensure the logged-in user actually owns the tutor profile receiving this request
+    booking = get_object_or_404(BookingRequest, id=booking_id, tutor_profile__user=request.user)
+    
+    if request.method == 'POST':
+        action = request.POST.get('action') # 'approve' or 'reject'
+        
+        if action == 'approve':
+            booking.status = 'approved'
+            booking.save()
+            messages.success(request, "You have accepted this booking request!")
+            
+        elif action == 'reject':
+            reason = request.POST.get('rejection_reason', '').strip()
+            if not reason:
+                messages.error(request, "Please provide a brief reason for declining.")
+                # CHANGED: Redirects to the central dashboard router
+                return redirect('dashboard')
+                
+            booking.status = 'rejected'
+            booking.rejection_reason = reason
+            booking.save()
+            messages.success(request, "Request declined and feedback sent to student.")
+            
+    return redirect('dashboard')
+
+@login_required
+def dashboard_router(request):
+    # Route 1: User is a Tutor
+    if getattr(request.user, 'user_type', None) == 'tutor':
+        # Fetch all pending and history items for this specific tutor profile
+        incoming_bookings = BookingRequest.objects.filter(tutor_profile__user=request.user)
+        context = {
+            'pending_bookings': incoming_bookings.filter(status='pending'),
+            'booking_history': incoming_bookings.exclude(status='pending'),
+        }
+        return render(request, 'tutor_dashboard.html', context)
+    
+    # Route 2: User is a Student (Default Fallback)
+    else:
+        # Fetch all requests this student has sent out
+        sent_bookings = BookingRequest.objects.filter(student=request.user)
+        context = {
+            'sent_bookings': sent_bookings
+        }
+        return render(request, 'student_dashboard.html', context)
+
+@login_required
+def cancel_booking_request(request, booking_id):
+    # Ensure the request belongs to the logged-in student and is still pending
+    booking = get_object_or_404(BookingRequest, id=booking_id, student=request.user)
+    
+    if booking.status == 'pending':
+        booking.delete()
+        messages.success(request, "Booking request cancelled successfully.")
+    else:
+        messages.error(request, "This booking cannot be cancelled because its status has changed.")
+
+    # If using HTMX, return an empty body with a 200 OK so HTMX swaps nothing (removes row)
+    if request.headers.get('HX-Request'):
+        response = HttpResponse("")
+        # Optional: trigger a full reload to show messages, or rely on HTMX swapping
+        response['HX-Redirect'] = '/dashboard/' 
+        return response
+
+    return redirect('dashboard')

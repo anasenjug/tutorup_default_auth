@@ -66,3 +66,8 @@ class ContactForm(forms.Form):
     email = forms.EmailField()
     subject = forms.CharField(max_length=150)
     message = forms.CharField(widget=forms.Textarea)
+
+class BookingRequestForm(forms.ModelForm):
+    class Meta:
+        model = BookingRequest
+        fields = ['description', 'education_level']

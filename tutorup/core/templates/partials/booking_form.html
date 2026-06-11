@@ -1,0 +1,67 @@
+<form hx-post="{% url 'create_booking_request' tutor_profile.user.id %}" 
+      hx-target="#booking-form-container" 
+      hx-swap="innerHTML"
+      class="m-0">
+    {% csrf_token %}
+    
+    {% if form.non_field_errors %}
+        <div class="alert alert-danger p-2 mb-3 rounded-3 small">
+            {% for error in form.non_field_errors %}
+                <span class="d-block">{{ error }}</span>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="mb-4">
+        <label for="id_description" class="text-tudarkblue fw-bold mb-2 small text-uppercase tracking-wider">
+            Describe the help you need with your course or subject.
+        </label>
+        <textarea name="description" 
+                  id="id_description" 
+                  class="form-control {% if form.description.errors %}is-invalid{% endif %}" 
+                  rows="5" 
+                  placeholder="Provide specifics on chapters, homework, or exam goals..." 
+                  required>{{ form.description.value|default_if_none:'' }}</textarea>
+        
+        {% if form.description.errors %}
+            <div class="errorlist mt-1 text-danger small">
+                {% for error in form.description.errors %}
+                    <small class="d-block">⚠️ {{ error }}</small>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="mb-5">
+        <label for="id_education_level" class="text-tudarkblue fw-bold mb-2 small text-uppercase tracking-wider">
+            Select your education level
+        </label>
+        <select name="education_level" 
+                id="id_education_level" 
+                class="form-select {% if form.education_level.errors %}is-invalid{% endif %}" 
+                required>
+            <option value="" disabled {% if not form.education_level.value %}selected{% endif %} hidden>Choose your current level...</option>
+            <option value="middle_school" {% if form.education_level.value == 'middle_school' %}selected{% endif %}>Middle School</option>
+            <option value="high_school" {% if form.education_level.value == 'high_school' %}selected{% endif %}>High School</option>
+            <option value="college" {% if form.education_level.value == 'college' %}selected{% endif %}>College</option>
+            <option value="graduate_school" {% if form.education_level.value == 'graduate_school' %}selected{% endif %}>Graduate School</option>
+            <option value="other" {% if form.education_level.value == 'other' %}selected{% endif %}>Other</option>
+        </select>
+        
+        {% if form.education_level.errors %}
+            <div class="errorlist mt-1 text-danger small">
+                {% for error in form.education_level.errors %}
+                    <small class="d-block">⚠️ {{ error }}</small>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="text-center pt-2">
+        <button type="submit" 
+                class="btn btn-tuorange text-white rounded-pill px-5 fw-bold w-100 text-nowrap d-inline-flex align-items-center justify-content-center mx-auto" 
+                style="height: 52px; font-size: 1.1rem; max-width: 480px;">
+            Request a booking for ${{ tutor_profile.hourly_rate|default:"0" }}/hr
+        </button>
+    </div>
+</form>

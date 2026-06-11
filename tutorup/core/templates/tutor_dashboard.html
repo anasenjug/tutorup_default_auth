@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12 bootstrap-form-container">
+            
+            <div class="d-flex align-items-center justify-content-between mb-4 border-bottom pb-3">
+                <h2 class="text-tudarkblue fw-bold h3 mb-0">Tutor Management Hub</h2>
+                <span class="badge bg-tulightblue text-tudarkblue px-3 py-2 rounded-pill fw-semibold border border-2 border-primary">
+                    Active Session
+                </span>
+            </div>
+
+            <div class="card shadow-sm border-0 p-4 bg-white mb-5">
+                <h4 class="text-tumedblue fw-bold h5 mb-3 text-uppercase tracking-wider">
+                    📥 Pending Student Requests
+                </h4>
+                
+                {% for booking in pending_bookings %}
+                    <div class="p-3 border rounded-3 mb-3 bg-light">
+                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                            <div>
+                                <h5 class="mb-1 text-tudarkblue fw-bold h6">
+                                    Request from: {{ booking.student.get_full_name|default:booking.student.username }}
+                                </h5>
+                                <p class="mb-2 text-secondary small">
+                                    <strong>Level:</strong> {{ booking.get_education_level_display }} | 
+                                    <strong>Proposed Rate:</strong> <span class="text-success fw-bold">${{ booking.rate_at_booking }}/hr</span>
+                                </p>
+                                <blockquote class="bg-white p-2 rounded border small text-muted mb-0 italic">
+                                    "{{ booking.description }}"
+                                </blockquote>
+                            </div>
+                            
+                            <div class="d-flex align-items-center gap-2">
+                                <form method="post" action="{% url 'respond_to_booking' booking.id %}" class="m-0">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="approve">
+                                    <button type="submit" class="btn btn-success text-white rounded-pill px-3 py-1 fw-bold btn-sm">
+                                        Accept
+                                    </button>
+                                </form>
+
+                                <button type="button" 
+                                        class="btn btn-outline-danger rounded-pill px-3 py-1 fw-bold btn-sm"
+                                        data-bs-toggle="collapse" 
+                                        data-bs-target="#declineForm-{{ booking.id }}">
+                                    Decline...
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="collapse mt-3" id="declineForm-{{ booking.id }}">
+                            <form method="post" action="{% url 'respond_to_booking' booking.id %}" class="border-top pt-3 m-0">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="reject">
+                                
+                                <label class="small text-danger fw-bold mb-1">Reason for Declining:</label>
+                                <textarea name="rejection_reason" class="form-control p-2 small mb-2" rows="2" placeholder="Tell the student why you are declining this request (e.g., schedule conflicts)..." required></textarea>
+                                
+                                <div class="d-flex justify-content-end gap-2">
+                                    <button type="submit" class="btn btn-danger text-white rounded-pill px-3 py-1 btn-sm fw-semibold">
+                                        Send Rejection Notice
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="text-center py-4 text-muted border border-dashed rounded-3 bg-light">
+                        No pending booking requests right now. You're all caught up!
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="card shadow-sm border-0 p-4 bg-white">
+                <h4 class="text-tudarkblue fw-bold h5 mb-3 text-uppercase tracking-wider">
+                    📋 Request History Log
+                </h4>
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr class="text-secondary small text-uppercase">
+                                <th>Student</th>
+                                <th>Date Processed</th>
+                                <th>Resolution Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for booking in booking_history %}
+                                <tr>
+                                    <td class="fw-semibold text-tudarkblue">{{ booking.student.username }}</td>
+                                    <td class="text-muted small">{{ booking.updated_at|date:"M d, Y" }}</td>
+                                    <td>
+                                        {% if booking.status == 'approved' %}
+                                            <span class="badge bg-success text-white rounded-pill px-3 py-2">Accepted</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary text-white rounded-pill px-3 py-2">Declined</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="3" class="text-center py-3 text-muted">No historic record items found.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% include "partials/cancel_modal.html" %}
+
+{% endblock %}

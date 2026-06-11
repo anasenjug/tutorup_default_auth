@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12 bootstrap-form-container">
+            
+            <div class="d-flex align-items-center justify-content-between mb-4 border-bottom pb-3">
+                <h2 class="text-tudarkblue fw-bold h3 mb-0">Student Hub</h2>
+                <span class="badge bg-tulightblue text-tudarkblue px-3 py-2 rounded-pill fw-semibold border border-2 border-primary">
+                    Active Session
+                </span>
+            </div>
+
+            <div class="card shadow-sm border-0 p-4 bg-white">
+                <div class="mb-4">
+                    <h4 class="text-tumedblue fw-bold h5 mb-1 text-uppercase tracking-wider">
+                        My Booking Requests
+                    </h4>
+                    <p class="text-muted small mb-0">Track the current status of your applications or review incoming feedback from your chosen tutors.</p>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr class="text-secondary small text-uppercase" style="font-size: 0.85rem; letter-spacing: 0.05em;">
+                                <th>Tutor</th>
+                                <th>Requested On</th>
+                                <th>Locked Rate</th>
+                                <th>Status Tracking</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for booking in sent_bookings %}
+                                <tr class="border-bottom-custom">
+                                    <td class="fw-bold text-tudarkblue py-3">
+                                        {{ booking.tutor_profile.user.get_full_name|default:booking.tutor_profile.user.username }}
+                                    </td>
+                                    
+                                    <td class="text-muted small">
+                                        {{ booking.created_at|date:"M d, Y" }}
+                                    </td>
+                                    
+                                    <td class="fw-bold text-tudarkblue">
+                                        ${{ booking.rate_at_booking }}/hr
+                                    </td>
+                                    
+                                    <td>
+                                        {% if booking.status == 'pending' %}
+                                            <div class="d-flex align-items-center gap-2 flex-wrap">
+                                                <span class="badge bg-warning text-dark rounded-pill px-3 py-2 fw-semibold d-inline-block">
+                                                    Pending Review
+                                                </span>
+                                                
+                                               <button type="button"
+                                                        class="btn btn-outline-danger btn-sm rounded-pill px-3 py-1 fw-bold fs-7"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#cancelConfirmModal"
+                                                        x-data
+                                                        @click="$dispatch('set-cancel-url', { url: '{% url 'cancel_booking_request' booking.id %}' })">
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                            
+                                        {% elif booking.status == 'approved' %}
+                                            <span class="badge bg-success text-white rounded-pill px-3 py-2 fw-semibold d-inline-block">
+                                                Accepted
+                                            </span>
+                                            
+                                        {% elif booking.status == 'rejected' %}
+                                            <span class="badge bg-danger text-white rounded-pill px-3 py-2 fw-semibold d-inline-block mb-1">
+                                                Declined
+                                            </span>
+                                            
+                                            {% if booking.rejection_reason %}
+                                                <div class="p-2.5 rounded-3 bg-light text-muted mt-2 border-start border-danger border-3 shadow-xs" style="max-width: 280px; font-size: 0.8rem; line-height: 1.4;">
+                                                    <span class="text-danger fw-bold d-block small mb-0.5">Tutor Feedback Note:</span>
+                                                    <span class="fst-italic">"{{ booking.rejection_reason }}"</span>
+                                                </div>
+                                            {% endif %}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center py-5 text-muted bg-light border border-dashed rounded-3">
+                                        <div class="py-3">
+                                            <i class="bi bi-calendar-x d-block mb-2 text-secondary fs-3"></i>
+                                            <p class="mb-0 fw-semibold">You haven't requested any tutor bookings yet.</p>
+                                            <p class="extra-small text-muted mb-3">Head over to the tutor search directory to schedule your first session.</p>
+                                            <a href="{% url 'tutor_search' %}" class="btn btn-tumedblue text-white rounded-pill px-4 py-2 btn-sm fw-bold text-decoration-none">
+                                                Browse Tutors
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% include "partials/cancel_modal.html" %}
+
+{% endblock %}

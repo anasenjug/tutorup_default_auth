@@ -1,0 +1,28 @@
+<div class="modal fade" 
+     id="bookingModal" 
+     tabindex="-1" 
+     aria-labelledby="bookingModalLabel" 
+     aria-hidden="true"
+     x-data
+     @booking-success.window="
+        const instance = bootstrap.Modal.getInstance($el);
+        if (instance) instance.hide();
+        window.location.href = '{% url 'dashboard' %}';
+     ">
+    
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow rounded-4 p-2 position-relative bg-white">
+            
+            <button type="button" 
+                    class="btn-close position-absolute top-0 end-0 m-4 shadow-none border-0" 
+                    data-bs-dismiss="modal" 
+                    aria-label="Close" 
+                    style="z-index: 1051;"></button>
+
+            <div class="modal-body p-4 bootstrap-form-container" id="booking-form-container">
+                {% include "partials/booking_form.html" %}
+            </div>
+
+        </div>
+    </div>
+</div>

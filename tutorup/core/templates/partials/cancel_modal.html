@@ -1,0 +1,52 @@
+<div class="modal fade" 
+     id="cancelConfirmModal" 
+     tabindex="-1" 
+     aria-labelledby="cancelConfirmModalLabel" 
+     aria-hidden="true"
+     x-data="{ targetUrl: '' }"
+     @set-cancel-url.window="
+        targetUrl = $event.detail.url;
+        $nextTick(() => { htmx.process($refs.cancelForm) });
+     ">
+    
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 400px;">
+        <div class="modal-content border-0 shadow rounded-4 p-3 bg-white text-center">
+            
+            <div class="my-3 text-danger">
+                <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto" style="width: 60px; height: 60px; background-color: #ffeef0;">
+                    <span class="fs-3">⚠️</span>
+                </div>
+            </div>
+
+            <div class="modal-body p-2">
+                <h4 class="text-tudarkblue fw-bold h5 mb-2">Cancel This Request?</h4>
+                <p class="text-muted small mb-0 px-2">
+                    Are you sure you want to cancel your session request? This action cannot be undone, and the tutor will no longer see it in their dashboard.
+                </p>
+            </div>
+
+            <div class="d-flex gap-2 justify-content-center pt-4 pb-2 px-2">
+                <button type="button" 
+                        class="btn btn-light rounded-pill px-4 fw-semibold w-50 btn-sm text-secondary" 
+                        data-bs-dismiss="modal"
+                        style="height: 40px;">
+                    Nevermind
+                </button>
+                
+                <form x-ref="cancelForm"
+                      :hx-post="targetUrl" 
+                      hx-target="body"
+                      class="m-0 w-50">
+                    {% csrf_token %}
+                    <button type="submit" 
+                            class="btn btn-danger text-white rounded-pill px-4 fw-bold w-100 btn-sm"
+                            data-bs-dismiss="modal"
+                            style="height: 40px;">
+                        Yes, Cancel Request
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>

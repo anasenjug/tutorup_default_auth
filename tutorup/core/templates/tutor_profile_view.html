@@ -44,9 +44,13 @@
                         Edit Profile
                     </a>
                 {% else %}
-                    <a href="#" class="btn btn-tuorange text-white px-4 fw-semibold rounded-pill">
-                        Book for ${{ tutor_profile.hourly_rate|default:"0" }}/hr
-                    </a>
+                    <button type="button" 
+                            class="btn btn-tuorange text-white px-4 fw-bold rounded-pill text-nowrap d-inline-flex align-items-center justify-content-center"
+                            style="height: 46px;"
+                            data-bs-toggle="modal" 
+                            data-bs-target="#bookingModal">
+                        Request a booking for ${{ tutor_profile.hourly_rate|default:"0" }}/hr
+                    </button>
                 {% endif %}
             </div>
         </div>
@@ -86,4 +90,7 @@
     </div>
 
 </div>
+
+{% include "partials/booking_modal.html" %}
+
 {% endblock %}
