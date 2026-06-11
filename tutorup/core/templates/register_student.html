@@ -1,155 +1,81 @@
+{% extends "base.html" %}
 {% load static %}
 
 {% block content %}
-
-<div class="card">
-    <div class="card-title"><h1>Sign Up</h1></div>
-
-    <div class="card-body">
-        <div class="logo-area">
-            <a href="{% url 'index' %}"><img src="{% static 'images/register_logo.svg' %}" width="260" /></a>
-        </div>
-
-            <div class="form-area">
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="row">
-                        <div class="form-group">
-                            <label for="{{ form.username.id_for_label }}">Username</label>
-                            {{ form.username }}
-                            {% if form.username.errors %}
-                                <div class="error">{{ form.username.errors }}</div>
-                            {% endif %}
-                        </div>
-
-                        <div class="form-group">
-                            <label for="{{ form.email.id_for_label }}">Email</label>
-                            {{ form.email }}
-                            {% if form.email.errors %}
-                                <div class="error">{{ form.email.errors }}</div>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="{{ form.password1.id_for_label }}">Password</label>
-                        {{ form.password1 }}
-                        {% if form.password1.errors %}
-                            <div class="error">{{ form.password1.errors }}</div>
-                        {% endif %}
-                    </div>
-
-                    <div class="form-group">
-                        <label for="{{ form.password2.id_for_label }}">Confirm Password</label>
-                        {{ form.password2 }}
-                        {% if form.password2.errors %}
-                            <div class="error">{{ form.password2.errors }}</div>
-                        {% endif %}
-                    </div>
-
-                    <button type="submit" class="btn-register">Register</button>
-                </form>
-
-                <p style="margin-top: 10px;">
-                    Already have an account? 
-                    <a href="{% url 'login' %}">Login here</a>
+<div class="container d-flex align-items-center justify-content-center min-vh-100 py-5">
+    
+    <div class="card border-0 rounded-4 shadow-lg overflow-hidden bg-white w-100 p-0" style="max-width: 900px;">
+        <div class="row g-0 align-items-stretch"> <div class="col-md-6 d-none d-md-flex flex-column justify-content-between bg-tulightblue p-4 p-lg-5 text-center">
+                <div class="my-auto">
+                    <a href="{% url 'index' %}" class="d-block mb-4">
+                        <img src="{% static 'images/register_logo.svg' %}" alt="TutorUp Logo" class="img-fluid" style="max-width: 240px;">
+                    </a>
+                </div>
+                <p class="text-tudarkblue fw-semibold small mb-0 mt-3 pt-2">
+                    Join our growing community of learners and educators.
                 </p>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card-body p-4 p-lg-5">
+                    
+                    <h1 class="text-tudarkblue fw-bold h2 mb-4 text-center text-md-start">Sign Up</h1>
+                    
+                    <form method="post" class="bootstrap-form-container">
+                        {% csrf_token %}
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-sm-6">
+                                <label for="{{ form.username.id_for_label }}" class="form-label text-tudarkblue fw-bold small">Username</label>
+                                {{ form.username }}
+                                {% if form.username.errors %}
+                                    <div class="text-danger small mt-1">{{ form.username.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="{{ form.email.id_for_label }}" class="form-label text-tudarkblue fw-bold small">Email</label>
+                                {{ form.email }}
+                                {% if form.email.errors %}
+                                    <div class="text-danger small mt-1">{{ form.email.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.password1.id_for_label }}" class="form-label text-tudarkblue fw-bold small">Password</label>
+                            {{ form.password1 }}
+                            {% if form.password1.errors %}
+                                <div class="text-danger small mt-1">{{ form.password1.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="{{ form.password2.id_for_label }}" class="form-label text-tudarkblue fw-bold small">Confirm Password</label>
+                            {{ form.password2 }}
+                            {% if form.password2.errors %}
+                                <div class="text-danger small mt-1">{{ form.password2.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="text-center text-md-start pt-2">
+                            <button type="submit" class="w-100 btn btn-tuorange text-white rounded-pill py-2 fw-bold fs-5">
+                                Register
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="mt-4 pt-2 text-center text-md-start border-top border-light">
+                        <p class="text-muted small mb-0">
+                            Already have an account? 
+                            <a href="{% url 'login' %}" class="text-tumedblue fw-bold text-decoration-none ms-1">Login here</a>
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+            
         </div>
     </div>
+    
 </div>
-
-<style>
-:root {
-    --bs-tudarkblue: #365295;
-    --bs-tumedblue: #6683D3;
-    --bs-tulightblue: #b7c5e2;
-    --bs-tuorange: #F99781;
-}
-
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    color:#365295; 
-    /* full-page background */
-    min-height: 100vh;
-    background: 
-        linear-gradient(180deg, #365295, #F99781), /* gradient */
-        url('{% static "images/register_background.png" %}') center/cover no-repeat; /* PNG */
-    background-blend-mode: overlay;
-}
-
-/* Center the card vertically */
-.card {
-    width: 70%;
-    max-width: 900px;
-    margin: 100px auto; /* top/bottom spacing */
-    background: white;
-    border-radius: 40px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-    padding: 0px;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    align-items: center;
-}
-
-.card-body{
-    display:flex;
-    gap:50px;
-    align-items:center;
-}
-
-.card-title{
-    color: #365295;
-    font-size: 32px;
-    font-weight: bold;
-    text-align: center;
-}
-
-.logo-area {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-}
-
-.form-area {
-    flex: 1;
-}
-
-.form-area input, .form-area select {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border-radius: 8px;
-    border: 1px solid var(--bs-tumedblue);
-    font-size: 15px;
-}
-
-.row {
-    display: flex;
-    gap: 20px;
-}
-
-.btn-register {
-    width: 180px;
-    margin-top: 20px;
-    padding: 12px;
-    background: var(--bs-tuorange);
-    color: white;
-    font-weight: bold;
-    border: none;
-    border-radius: 30px;
-    font-size: 18px;
-    cursor: pointer;
-}
-
-.form-group label {
-    color: #365295; 
-    font-weight: bold;
-    font-size: 14px; 
-    display: block; 
-    margin-bottom: 5px;
-}
-</style>
-
 {% endblock %}

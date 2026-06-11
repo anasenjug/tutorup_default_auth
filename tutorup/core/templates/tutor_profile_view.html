@@ -1,83 +1,89 @@
-
 {% extends "base.html" %}
-
 {% load static %}
-{% block content %}
-<div class="container">
-    <div class="row justify-content-start">
-        <div class="col-4">
-            {% if tutor_profile.profile_picture %}
-            <img src="{{ tutor_profile.profile_picture.url }}" alt="{{ tutor_profile.user.username }}'s Profile Picture" class="img-fluid" style="max-width:110%; padding-top: 7%; padding-right: 10%;">
-            {% else %}
-                <p>No profile picture available</p>
-            {% endif %}
-            </div>
-            <div class="col-4" style="padding-top: 5%;">
 
-            <h1>{{ tutor_profile.user.username }}</h1>
-            <h2>{{ tutor_profile.first_name }}  {{ tutor_profile.last_name }}</h2>
-                <h4><strong> <img src="{% static 'images/location.svg' %}" alt="Location Icon" style="width: 6%; height: auto;"></strong> {{ tutor_profile.location }}</h4>
+{% block content %}
+<div class="container py-5">
+    
+    <div class="row g-4 align-items-center mb-5">
+        
+        <div class="col-md-4 col-lg-3 text-center text-md-start">
+            {% if tutor_profile.profile_picture %}
+                <div class="ratio ratio-1x1 mx-auto rounded-3 overflow-hidden shadow-sm border border-light" style="max-width: 240px;">
+                    <img src="{{ tutor_profile.profile_picture.url }}" alt="{{ tutor_profile.user.username }}'s Profile Picture" class="object-fit-cover w-100 h-100">
+                </div>
+            {% else %}
+                <div class="bg-light rounded-3 d-flex align-items-center justify-content-center mx-auto shadow-sm text-secondary" style="width: 240px; height: 240px;">
+                    <span class="small">No profile picture</span>
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="col-md-8 col-lg-9 text-center text-md-start">
+            <span class="text-muted small fw-bold text-uppercase tracking-wider">@{{ tutor_profile.user.username }}</span>
+            <h1 class="text-tudarkblue fw-bold display-5 mb-3">{{ tutor_profile.first_name }} {{ tutor_profile.last_name }}</h1>
+            
+            <div class="d-flex flex-wrap justify-content-center justify-content-md-start gap-4 mb-4 text-tumedblue small">
+                <span class="fw-semibold">
+                    <img src="{% static 'images/location.svg' %}" alt="Location Icon" class="icon-inline me-1"> 
+                    {{ tutor_profile.location|default:"Zagreb, Croatia" }}
+                </span>
 
                 {% if tutor_profile.is_online or tutor_profile.is_in_person %}
-                <h4>
-                    <img src="{% static 'images/onlineinperson.svg' %}" alt="Person Icon" style="width: 9%; height: auto;">
-                    <strong>{% if tutor_profile.is_online %}Online{% endif %}</strong>
-                    {% if tutor_profile.is_online and tutor_profile.is_in_person %} and {% endif %}
-                    <strong>{% if tutor_profile.is_in_person %}In-Person{% endif %}</strong>
-                </h4>
+                    <span>
+                        <img src="{% static 'images/onlineinperson.svg' %}" alt="Modality Icon" class="icon-inline-lg me-1">
+                        {% if tutor_profile.is_online %}<span class="fw-semibold">Online</span>{% endif %}
+                        {% if tutor_profile.is_online and tutor_profile.is_in_person %} and {% endif %}
+                        {% if tutor_profile.is_in_person %}<span class="fw-semibold">In-Person</span>{% endif %}
+                    </span>
                 {% endif %}
+            </div>
 
+            <div>
                 {% if request.user == tutor_profile.user %}
-                <a href="{% url 'tutor_profile_edit' %}" class="btn btn-primary">Edit Profile</a>
+                    <a href="{% url 'tutor_profile_edit' %}" class="btn btn-tumedblue px-4 fw-semibold rounded-pill">
+                        Edit Profile
+                    </a>
                 {% else %}
-                <a href="#" class="btn btn-primary">Book {{ tutor_profile.user.username }} for {{ tutor_profile.hourly_rate }}</a>
+                    <a href="#" class="btn btn-tuorange text-white px-4 fw-semibold rounded-pill">
+                        Book for ${{ tutor_profile.hourly_rate|default:"0" }}/hr
+                    </a>
                 {% endif %}
-
-                
-                
+            </div>
         </div>
-    <hr>
     </div>
 
-    <p><strong>About Me:</strong> {{ tutor_profile.about_me }}</p>
-    <p><strong>Subjects:</strong> {{ tutor_profile.subjects }}</p>
-    <p><strong>Qualifications:</strong> {{ tutor_profile.qualifications }}</p>
-    <p><strong>Availability:</strong> {{ tutor_profile.availability }}</p>
-  
+    <div class="row g-4 mb-5">
+        <div class="col-12">
+            <div class="card bg-tulightblue border-0 rounded-3 p-4 shadow-sm">
+                <h3 class="h5 text-tudarkblue fw-bold mb-3">About Me</h3>
+                <p class="text-secondary mb-0 lh-base">{{ tutor_profile.about_me|default:"No description provided yet." }}</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-tulightblue border border-light rounded-3 p-4 h-100 shadow-sm">
+                <h3 class="h6 text-tudarkblue fw-bold mb-2">Subjects</h3>
+                <p class="text-secondary small mb-0">{{ tutor_profile.subjects|default:"None listed." }}</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-tulightblue border border-light rounded-3 p-4 h-100 shadow-sm">
+                <h3 class="h6 text-tudarkblue fw-bold mb-2">Qualifications</h3>
+                <p class="text-secondary small mb-0">{{ tutor_profile.qualifications|default:"None listed." }}</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-tulightblue border border-light rounded-3 p-4 h-100 shadow-sm">
+                <h3 class="h6 text-tudarkblue fw-bold mb-2">Availability</h3>
+                <p class="text-secondary small mb-0">{{ tutor_profile.availability|default:"None listed." }}</p>
+            </div>
+        </div>
+    </div>
 
+    <hr class="my-5 opacity-25 text-tumedblue">
+    
+    <div id="tutor-reviews-container">
+        {% include "partials/tutor_reviews.html" %}
+    </div>
 
 </div>
-
-<hr>
-<h3>Reviews</h3>
-<p><strong>Average Rating:</strong> {{ tutor_profile.average_rating|floatformat:1 }} / 5</p>
-
-{% for review in reviews.all %}
-    <div class="review">
-        <p><strong>{{ review.student.username }}</strong> ({{ review.created_at|date:"M d, Y" }})</p>
-        <p>Rating: ⭐{{ review.rating }}</p>
-        <p>{{ review.comment }}</p>
-        {% if request.user == review.student %}
-            <form method="post" action="{% url 'delete_review' review.id %}" style="display:inline;">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-            </form>
-        {% endif %}
-        <hr>
-    </div>
-{% empty %}
-    <p>No reviews yet.</p>
-{% endfor %}
-
-{% if request.user.is_authenticated and request.user.user_type == 'student' %}
-    <h3>Leave a Review</h3>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Submit Review</button>
-    </form>
-{% else %}
-    <p><a href="{% url 'login' %}">Log in</a> as a student to leave a review.</p>
-{% endif %}
-
 {% endblock %}

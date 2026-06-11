@@ -3,15 +3,14 @@
     <div class="d-flex flex-column gap-4">
         {% for tutor in tutors %}
             <!-- Horizontal Card Wrapper -->
-            <div class="card shadow-sm p-0 position-relative overflow-hidden" style="border: none; background-color: #EFF4FF; border-radius: 8px;">
+            <div class="card shadow-sm p-0 position-relative overflow-hidden border-0 bg-tulightblue rounded-3">
                 <div class="row g-0 align-items-center">
                     
                     <!-- Left Side: Profile Picture Column -->
-                    <div class="col-md-3 position-relative" style="height: 220px;">
+                    <div class="col-md-3 position-relative card-search-tutor-img">
                         <img src="{% if tutor.profile_picture %}{{ tutor.profile_picture.url }}{% else %}https://placeholder.com{% endif %}" 
                              alt="{{ tutor.first_name }}'s profile picture" 
-                             class="w-100 h-100" 
-                             style="object-fit: cover;">
+                             class="w-100 h-100 object-fit-cover">
                     </div>
                     
                     <!-- Right Side: Content Area Column -->
@@ -21,42 +20,46 @@
                             <!-- Header Info Line -->
                             <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2">
                                 <div>
-                                    <h4 class="card-title mb-1" style="color: #324373; font-weight: bold;">
+                                    <h4 class="card-title mb-1 text-tudarkblue fw-bold">
                                         {{ tutor.first_name }} {{ tutor.last_name}}
                                     </h4>
-                                    <div class="d-flex gap-3 text-muted small">
-                                        <span><img src="{% static 'images/location.svg' %}" alt="location icon" style="width: 14px; height: 14px; vertical-align: middle;"> {{ tutor.location|default:"Zagreb, Croatia" }}</span>
-                                        <span> <img src="{% static 'images/onlineinperson.svg' %}" style="width: 20px; height: 20px; vertical-align: middle;"> {% if tutor.is_online %}Online{% endif %}{% if tutor.is_online and tutor.is_in_person %} and {% endif %}{% if tutor.is_in_person %}In person{% endif %}</span>
+                                    <div class="d-flex gap-3 text-tumedblue small align-items-center">
+                                        <span class="fw-semibold"><img src="{% static 'images/location.svg' %}" alt="location icon" class="icon-inline"> {{ tutor.location|default:"none" }}</span>
+                                        <span> <img src="{% static 'images/onlineinperson.svg' %}" class="icon-inline"> 
+                                            {% if tutor.is_online %}<span class="fw-semibold">Online</span>{% endif %} 
+                                            {% if tutor.is_online and tutor.is_in_person %} and {% endif %}
+                                            {% if tutor.is_in_person %}<span class="fw-semibold">In person</span>{% endif %}
+                                        </span>
                                     </div>
                                 </div>
                                 
                                 <!-- Ratings Section -->
                                 <div class="d-flex align-items-center gap-1">
-                                    <span class="fw-bold small">{{ tutor.average_rating|floatformat:1 }}</span>
-                                    <span class="text-muted small">({{ tutor.review_count }})</span>
-                                    <img src="{% static 'images/star.svg' %}" alt="star icon" style="width: 14px; height: 14px; vertical-align: middle;">
+                                    <span class="fw-bold small text-tudarkblue">{{ tutor.average_rating|floatformat:1 }}</span>
+                                    <span class="text-tumedblue small">({{ tutor.review_count }})</span>
+                                    <img src="{% static 'images/star.svg' %}" alt="star icon" class="icon-inline">
                                 </div>
                             </div>
                             
-                            <hr style="border-color: #D0E0FF; margin: 12px 0;">
+                            <hr class="my-3 opacity-25 text-tumedblue">
                             
                             <!-- Bio / Description Paragraph -->
-                            <p class="card-text text-secondary mb-4" style="font-size: 0.95rem; line-height: 1.5;">
+                            <p class="card-text text-secondary mb-4 small lh-base">
                                 {{ tutor.bio|default:"No description provided yet." }}
                             </p>
                             
                             <!-- Footer Action Line -->
                             <div class="d-flex justify-content-end align-items-center gap-3">
-                                <span class="fw-bold fs-5 me-auto" style="color: #324373;">
+                                <span class="fw-bold fs-5 me-auto text-tudarkblue">
                                     ${{ tutor.hourly_rate|default:"0" }}/hr
                                 </span>
                                 
                                 <!-- Optional: HTMX or direct link to booking -->
-                                <a href="#" class="btn px-4 fw-semibold text-white" style="background-color: #FFA07A; border: none; border-radius: 20px;">
+                                <a href="#" class="btn btn-tuorange px-4 fw-semibold text-white px-4 fw-semibold rounded-pill">
                                     Book
                                 </a>
                                 
-                                <a href="{% url 'tutor_profile_view' pk=tutor.pk %}" class="btn px-4 fw-semibold text-white" style="background-color: #324373; border: none; border-radius: 20px;">
+                                <a href="{% url 'tutor_profile_view' pk=tutor.user.id %}" class="btn btn-tudarkblue px-4 fw-semibold text-white rounded-pill">
                                     Learn more
                                 </a>
                             </div>
@@ -68,7 +71,7 @@
             </div>
         {% empty %}
             <div class="text-center my-5">
-                <p class="text-muted">No tutors found matching your criteria.</p>
+                <p class="text-secondary">No tutors found matching your criteria.</p>
             </div>
         {% endfor %}
     </div>
@@ -80,8 +83,8 @@
                 <button 
                     hx-get="?page={{ tutors.previous_page_number }}" 
                     hx-target="#search-results" 
-                    hx-swap="outerHTML"
-                    class="btn btn-sm btn-secondary">
+                    hx-swap="outerHTML show:window:top"
+                    class="btn btn-sm btn-tumedblue">
                     Previous
                 </button>
             {% endif %}
@@ -92,7 +95,7 @@
                 <button 
                     hx-get="?page={{ tutors.next_page_number }}{% if query_params %}&{{ query_params }}{% endif %}"
                     hx-target="#search-results" 
-                    hx-swap="outerHTML"
+                    hx-swap="outerHTML show:window:top"
                     class="btn btn-sm btn-tumedblue">
                     Next
                 </button>

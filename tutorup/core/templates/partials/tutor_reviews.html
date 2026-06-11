@@ -1,0 +1,66 @@
+{% load static %}
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="d-flex align-items-center gap-2 mb-4">
+            <h3 class="text-tudarkblue fw-bold mb-0">Reviews</h3>
+            <span class="badge bg-tulightblue text-tudarkblue rounded-pill fw-bold px-3 py-2">
+                <img src="{% static 'images/star.svg' %}" alt="star icon" class="icon-inline-small"> {{ tutor_profile.average_rating|floatformat:1 }}
+            </span>
+        </div>
+
+        <div class="d-flex flex-column gap-3">
+            {% for review in reviews.all %}
+                <div class="card bg-tulightblue border-light rounded-3 p-3 shadow-sm position-relative">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <h6 class="text-tudarkblue fw-bold mb-0">@{{ review.student.username }}</h6>
+                            <span class="text-muted small opacity-75">{{ review.created_at|date:"M d, Y" }}</span>
+                        </div> 
+                        
+                        <span class="badge bg-warning bg-opacity-10 text-warning fw-bold px-2 py-1 small">
+                            <img src="{% static 'images/star.svg' %}" alt="star icon" class="icon-inline-small"> 
+                            <span>{{ review.rating }}</span>
+                        </span>
+                    </div>
+                    <p class="text-secondary small mb-0 lh-base">{{ review.comment }}</p>
+                    
+                    {% if request.user == review.student %}
+                        <form method="post" action="{% url 'delete_review' review.id %}" class="position-absolute bottom-0 end-0 p-3">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-link text-danger text-decoration-none small p-0 opacity-70 hover-opacity-100">
+                                Delete
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+            {% empty %}
+                <div class="card border-0 bg-tulightblue rounded-3 p-4 text-center">
+                    <p class="text-muted small mb-0">No reviews recorded yet for this tutor.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="card bg-tulightblue border border-light rounded-3 p-4 shadow-sm position-sticky" style="top: 2rem;">
+            <h4 class="text-tudarkblue fw-bold mb-3 h5">Leave a Review</h4>
+            
+            {% if request.user.is_authenticated and request.user.user_type == 'student' %}
+                <form method="post" class="bootstrap-form-container">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="w-100 mt-2 btn btn-tuorange">
+                        Submit Review
+                    </button>
+                </form>
+            {% else %}
+                <div class="bg-light p-3 rounded-3 text-center">
+                    <p class="text-muted small mb-0">
+                        Please <a href="{% url 'login' %}" class="text-tumedblue fw-semibold text-decoration-none">log in</a> as a student to share your experience.
+                    </p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>

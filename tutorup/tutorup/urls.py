@@ -13,8 +13,9 @@ urlpatterns = [
     path('', views.index, name='index'),
 
     # Authentication
-    path('accounts/login/', auth_views.LoginView.as_view(template_name='login.html',next_page='index'), name='login'),
+    path('accounts/login/', views.CustomLoginView.as_view(),name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
+    path('tutor/pending/', views.tutor_pending_view,name='tutor_pending'),
 
     # Registration
     path('register/student/', views.student_register, name='register_student'),

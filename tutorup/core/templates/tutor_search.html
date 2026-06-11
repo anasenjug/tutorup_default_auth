@@ -3,33 +3,45 @@
 
 {% block content %}
 <div class="container-fluid py-4">
-    <!-- Bootstrap Row wrapper creates the side-by-side flex grid -->
     <div class="row g-4">
         
-        <!-- Left Column: Search Filter Form (Takes up 3/12 parts of width) -->
         <div class="col-md-3">
-            <div class="card shadow-sm p-4" style="background-color: #f8f9fa; border: none; border-radius: 8px;">
-                <h5 class="mb-3" style="color: #324373; font-weight: bold;">Filter Tutors</h5>
+            <div class="card shadow-sm p-4 bg-tulightblue border-0 bootstrap-form-container">
+                <h5 class="mb-3 text-tudarkblue fw-bold text-uppercase tracking-wider border-bottom pb-2" style="font-size: 0.9rem;">
+                    Filter Tutors
+                </h5>
+                
                 <form 
                     hx-get="{% url 'tutor_search' %}" 
                     hx-target="#search-results" 
-                    hx-swap="outerHTML">
+                    hx-swap="outerHTML show:window:top">
                     
-                    <!-- Renders your form fields cleanly -->
-                    <div class="mb-3">
-                        {{ form.as_p }}
-                    </div>
+                    {% for field in form %}
+                        <div class="mb-3">
+                            <label for="{{ field.id_for_label }}">
+                                {{ field.label }}
+                            </label>
+                            
+                            {{ field }}
+                            
+                            {% if field.errors %}
+                                <div class="errorlist mt-1">
+                                    {% for error in field.errors %}
+                                        <small class="error d-block">{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
                     
-                    <button type="submit" class="btn text-white w-100 fw-semibold" style="background-color: #324373; border-radius: 20px;">
+                    <button type="submit" class="btn btn-tuorange text-white rounded-pill px-4 py-2 fw-bold w-100 m-0 text-nowrap mt-2" style="height: 46px;">
                         Apply Filters
                     </button>
                 </form>
             </div>
         </div>
         
-        <!-- Right Column: Results Container (Takes up 9/12 parts of width) -->
         <div class="col-md-9">
-            <!-- Initially includes the results partial structure -->
             {% include "partials/tutor_search_results.html" %}
         </div>
 

@@ -1,8 +1,7 @@
-
 :root {
     --bs-tudarkblue: #324373;
-    --bs-tumedblue: #6683D3;
-    --bs-tulightblue:#EFF4FF;
+    --bs-tumedblue: #8699BF;
+    --bs-tulightblue: #EFF4FF;
     --bs-tuorange: #F99781;
 
     --bs-gradient-tutlr: linear-gradient(90deg, #365295, #F99781);
@@ -19,70 +18,200 @@
 .bg-gradient-tutlr { background: var(--bs-gradient-tutlr) !important; color: #fff; }
 .bg-gradient-tutud { background: var(--bs-gradient-tutud) !important; color: #fff; }
 
-/* Buttons */
+/* Theme Buttons */
 .btn-tudarkblue { 
     background-color: var(--bs-tudarkblue); 
-    color: #fff; 
+    color: #ffffff; 
     border: 2px solid var(--bs-tudarkblue); 
     transition: all 0.25s ease-in-out;
 }
 .btn-tudarkblue:hover {
+    background-color: #ffffff !important;
     color: var(--bs-tudarkblue) !important;
+    border-color: var(--bs-tudarkblue) !important;
 }
+
 .btn-tumedblue { 
     background-color: var(--bs-tumedblue);
     color: #ffffff;
     border: 2px solid var(--bs-tumedblue);
     transition: all 0.25s ease-in-out;
 }
-
 .btn-tumedblue:hover {
+    background-color: #ffffff !important;
     color: var(--bs-tumedblue) !important;
+    border-color: var(--bs-tumedblue) !important;
 }
 
 .btn-tuorange {
     background-color: var(--bs-tuorange);
-    color: #000000;
+    color: #ffffff;
     border: 2px solid var(--bs-tuorange);
     transition: all 0.25s ease-in-out;
 }
-
 .btn-tuorange:hover {
+    background-color: #ffffff !important;
     color: var(--bs-tuorange) !important;
+    border-color: var(--bs-tuorange) !important;
 }
 
+/* Text Utilities */
 .text-tudarkblue { color: var(--bs-tudarkblue) !important; }
 .text-tumedblue { color: var(--bs-tumedblue) !important; }
 .text-tulightblue { color: var(--bs-tulightblue) !important; }
 .text-tuorange { color: var(--bs-tuorange) !important; }
 
 /* Custom App-Specific Structural Layouts */
-
-/* Fluid UI Control for the Welcome/Join Button */
-.btn-join-us {
-    min-width: 200px;
-    max-width: 100%;
-    transition: transform 0.2s ease-in-out;
-}
-.btn-join-us:hover {
-    transform: scale(1.03);
-}
-
-/* Specific Card Layout Control */
 .card-tutor {
-    background-color: #EFF4FF !important; /* Soft card tint fallback */
+    background-color: #EFF4FF !important; 
 }
 
-/* Enforcing strict scaling controls for dynamic profile pictures */
-.card-tutor-img {
+.card-search-tutor-img {
+    height: 220px;
+    object-fit: cover;
+}
+
+.card-featured-tutor-img {
     height: 200px;
     object-fit: cover;
 }
 
 /* Reusable structural utility class for small inline iconography */
 .icon-inline {
-    width: 14px;
-    height: 14px;
+    height: 16px;
     vertical-align: middle;
     display: inline-block;
+}
+
+.icon-inline-small {
+    height: 12px;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+/* Form Layout Configurations */
+.bootstrap-form-container input,
+.bootstrap-form-container textarea,
+.bootstrap-form-container select {
+    display: block;
+    width: 100%;
+    padding: 0.375rem 0.75rem; 
+    font-size: 0.95rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid var(--bs-tumedblue); 
+    border-radius: 0.375rem;                 
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+/* Subtle glowing active states when a user clicks into a form line */
+.bootstrap-form-container input:focus,
+.bootstrap-form-container textarea:focus,
+.bootstrap-form-container select:focus {
+    border-color: var(--bs-tudarkblue);
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(54, 82, 149, 0.25); 
+}
+
+/* Forces text labels inside form fields to adopt brand colors and fonts */
+.bootstrap-form-container label {
+    display: inline-block;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    color: var(--bs-tudarkblue);
+}
+
+/* FIXED: Changed button element rule to class selector to allow color utility mixing */
+.bootstrap-form-container .btn-tuorange,
+.bootstrap-form-container input[type="submit"] {
+    display: inline-block;
+    width: 180px;
+    padding: 0.5rem 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 1.5;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    background-color: var(--bs-tuorange);
+    border: 2px solid var(--bs-tuorange);
+    color: #ffffff;
+    border-radius: 50rem; 
+    margin-top: 1rem;
+    transition: all 0.25s ease-in-out;
+}
+
+/* Color-flipping effect on hover fixed to explicitly follow class targeting */
+.bootstrap-form-container .btn-tuorange:hover,
+.bootstrap-form-container input[type="submit"]:hover {
+    background-color: #ffffff !important;
+    color: var(--bs-tuorange) !important;
+    border-color: var(--bs-tuorange) !important;
+}
+
+/* Standardizing custom field validation error outputs */
+.bootstrap-form-container .error,
+.bootstrap-form-container .errorlist {
+    color: var(--bs-danger, #dc3545); 
+    font-size: 0.875rem;
+    list-style-type: none;
+    padding-left: 0;
+    margin-top: -0.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Interactive Navigation Effects */
+.nav-glow-link {
+    position: relative;
+    transition: text-shadow 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.nav-glow-link:hover {
+    color: #ffffff !important;
+    text-shadow: 0 0 5px rgba(249, 151, 129, 0.8), 
+                 0 0 8px rgba(249, 151, 129, 0.5);
+}
+
+.logo-glow img {
+    transition: filter 0.3s ease-in-out; /* FIXED: Added missing time unit symbol 's' */
+}
+
+.logo-glow:hover img {
+    filter: drop-shadow(0 0 6px rgba(249, 151, 129, 0.45));
+}
+
+/* Authentication Page Wallpaper Layout rules */
+body:has(.min-vh-100) {
+    background: linear-gradient(180deg, rgba(54, 82, 149, 0.85), rgba(249, 151, 129, 0.85)),
+                url('../images/register_background.png') center/cover no-repeat fixed !important;
+}
+
+.min-h-400 {
+    min-height: 480px;
+}
+
+/* Custom CSS alignment overrides for file inputs and checkboxes */
+.bootstrap-form-container input[type="checkbox"] {
+    width: auto !important;
+    margin: 0 6px 0 0 !important;
+    margin-top: 0 !important; /* FIXED: Added to clear the general 0.5rem input margin offset */
+    display: inline-block !important;
+    cursor: pointer;
+}
+
+.bootstrap-form-container input[type="file"] {
+    border: 1px dashed var(--bs-tumedblue) !important;
+    background-color: var(--bs-tulightblue);
+    padding: 10px !important;
+    cursor: pointer;
+}
+
+.extra-small {
+    font-size: 11px;
 }

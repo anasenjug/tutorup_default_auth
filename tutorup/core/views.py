@@ -10,7 +10,26 @@ from django.db.models import Q
 from django.http import JsonResponse
 from django.contrib import messages
 from django.core.mail import send_mail
+from django.contrib.auth.views import LoginView
+from django.db import transaction
+import sys
 
+class CustomLoginView(LoginView):
+    template_name = 'login.html'
+    next_page = 'index'
+
+    def form_invalid(self, form):
+        username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password')
+        
+        from django.contrib.auth import authenticate
+        user = authenticate(username=username, password=password)
+        
+        if user is not None and not user.is_active:
+            if getattr(user, 'user_type', None) == 'tutor':
+                return redirect('tutor_pending')
+                
+        return super().form_invalid(form)
 
 def student_register(request):
     if request.method == 'POST':
@@ -26,15 +45,40 @@ def student_register(request):
     return render(request, 'register_student.html', {'form': form})
 
 
+def tutor_pending_view(request):
+    """Simple view to render the approval landing page."""
+    return render(request, 'tutor_pending.html')
+
+
 def tutor_register(request):
     if request.method == 'POST':
-        form = TutorRegistrationForm(request.POST)
-        if form.is_valid():
-            form.save()  # Save tutor but set is_active to False (awaiting admin approval)
-    else:
-        form = TutorRegistrationForm()
+        user_form = TutorRegistrationForm(request.POST)
+        profile_form = TutorProfileForm(request.POST, request.FILES)
 
-    return render(request, 'register_tutor.html', {'form': form})
+        if user_form.is_valid() and profile_form.is_valid():
+            try:
+                with transaction.atomic():
+                    user = user_form.save()
+                    profile, created = TutorProfile.objects.get_or_create(user=user)
+                    profile_form = TutorProfileForm(request.POST, request.FILES, instance=profile) 
+                    profile_form.save()
+                return redirect('tutor_pending')
+            except Exception as e:
+                # If something crashes at the database layer, show it in the terminal
+                print(f"--- DATABASE ERROR: {e} ---", file=sys.stderr)
+                user_form.add_error(None, "An unexpected database error occurred.")
+        else:
+            # CRITICAL DIAGNOSTIC: If forms are invalid, this prints the exact cause to your terminal
+            print("--- USER FORM ERRORS ---", user_form.errors, file=sys.stderr)
+            print("--- PROFILE FORM ERRORS ---", profile_form.errors, file=sys.stderr)
+    else:
+        user_form = TutorRegistrationForm()
+        profile_form = TutorProfileForm()
+
+    return render(request, 'register_tutor.html', {
+        'user_form': user_form,
+        'profile_form': profile_form
+    })
 
 def index(request):
     featured_tutors = TutorProfile.objects.filter(is_featured=True)
@@ -65,15 +109,17 @@ def about_us(request):
 @login_required
 def tutor_profile_edit(request):
     if request.user.user_type != 'tutor':
-        return redirect('index')  # Redirect if not a tutor
+        return redirect('index')
 
+    # Fetch the profile linked to this user securely
     profile, created = TutorProfile.objects.get_or_create(user=request.user)
 
     if request.method == 'POST':
         form = TutorProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
-            return redirect('tutor_profile_view', pk=request.user.id)
+            # FIXED: Redirect using the Profile's actual ID, NOT the User's account ID
+            return redirect('tutor_profile_view', pk=request.user.pk)
     else:
         form = TutorProfileForm(instance=profile)
 
@@ -81,36 +127,30 @@ def tutor_profile_edit(request):
 
 @login_required
 def tutor_profile_view(request, pk):
-    # Safely pull the profile along with its related user field setup
-    tutor_profile = get_object_or_404(TutorProfile.objects.select_related('user'), pk=pk)
+    # Pull profile along with user data in one clean DB hit
+    tutor_profile = get_object_or_404(TutorProfile.objects.select_related('user'), user__pk=pk)
 
-    # Safety filter line check
     if getattr(tutor_profile.user, 'user_type', None) != 'tutor':
         raise Http404("This profile does not belong to a valid tutor.")
 
-    # Pull associated model records list variables cleanly
     reviews = tutor_profile.reviews.all()
 
-    # Handle form handling branches explicitly
     if request.method == "POST":
         form = ReviewForm(request.POST)
         if form.is_valid():
             review = form.save(commit=False)
             review.student = request.user
-            review.tutor = tutor_profile.user  # Direct CustomUser assignment
+            review.tutor = tutor_profile  
             review.save()
             return redirect('tutor_profile_view', pk=pk)
     else:
-        # Instantiates a fresh blank form for default GET page loads
         form = ReviewForm()
     
-    # 5. Build context mapping dictionaries
     context = {
         'tutor_profile': tutor_profile,
         'reviews': reviews,
         'form': form
     }
-
     return render(request, 'tutor_profile_view.html', context)
         
 @login_required
@@ -241,3 +281,4 @@ def contact_us(request):
         "form": form,
         "sent": sent
     })
+

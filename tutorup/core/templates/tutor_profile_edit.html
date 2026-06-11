@@ -1,13 +1,116 @@
-<!-- tutor_profile_edit.html -->
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
-<div class="container">
-    <h1>Edit Your Profile</h1>
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Save</button>
-    </form>
+<div class="container py-5" style="max-width: 850px;">
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="text-tudarkblue fw-bold h2 mb-1">Edit Your Profile</h1>
+            <p class="text-muted small mb-0">Update your professional details and teaching availability.</p>
+        </div>
+        <a href="{% url 'tutor_profile_view' request.user.id %}" class="btn btn-tumedblue rounded-pill px-3">
+            View Profile
+        </a>
+    </div>
+
+    <div class="card border-0 rounded-4 shadow-sm bg-white p-4 p-md-5">
+        <form method="POST" enctype="multipart/form-data" class="bootstrap-form-container">
+            {% csrf_token %}
+
+            <h3 class="h6 text-tumedblue fw-bold text-uppercase tracking-wider mb-3 border-bottom pb-2">Personal Information</h3>
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <label for="{{ form.first_name.id_for_label }}" class="form-label text-tudarkblue fw-bold small">First Name</label>
+                    {{ form.first_name }}
+                    {{ form.first_name.errors }}
+                </div>
+                <div class="col-md-6">
+                    <label for="{{ form.last_name.id_for_label }}" class="form-label text-tudarkblue fw-bold small">Last Name</label>
+                    {{ form.last_name }}
+                    {{ form.last_name.errors }}
+                </div>
+                <div class="col-md-8">
+                    <label for="{{ form.location.id_for_label }}" class="form-label text-tudarkblue fw-bold small">Location</label>
+                    {{ form.location }}
+                    {{ form.location.errors }}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{ form.hourly_rate.id_for_label }}" class="form-label text-tudarkblue fw-bold small">Hourly Rate ($)</label>
+                    {{ form.hourly_rate }}
+                    {{ form.hourly_rate.errors }}
+                </div>
+                <div class="col-12">
+                    <div class="d-flex gap-4 my-1">
+                        <div class="form-check">
+                            {{ form.is_online }}
+                            <label class="form-check-label text-tudarkblue fw-semibold small" for="{{ form.is_online.id_for_label }}">Available Online</label>
+                        </div>
+                        <div class="form-check">
+                            {{ form.is_in_person }}
+                            <label class="form-check-label text-tudarkblue fw-semibold small" for="{{ form.is_in_person.id_for_label }}">Available In-Person</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="h6 text-tumedblue fw-bold text-uppercase tracking-wider mb-3 border-bottom pb-2">Teaching Profiles & Biography</h3>
+            <div class="row g-3 mb-4">
+                <div class="col-12">
+                    <label for="{{ form.subjects.id_for_label }}" class="form-label text-tudarkblue fw-bold small">Subjects You Teach</label>
+                    {{ form.subjects }}
+                    {{ form.subjects.errors }}
+                    <div class="form-text text-muted extra-small">Separate multiple entries cleanly using commas.</div>
+                </div>
+                <div class="col-12">
+                    <label for="{{ form.about_me.id_for_label }}" class="form-label text-tudarkblue fw-bold small">About Me</label>
+                    {{ form.about_me }}
+                    {{ form.about_me.errors }}
+                </div>
+                <div class="col-12">
+                    <label for="{{ form.qualifications.id_for_label }}" class="form-label text-tudarkblue fw-bold small">Qualifications</label>
+                    {{ form.qualifications }}
+                    {{ form.qualifications.errors }}
+                </div>
+                <div class="col-12">
+                    <label for="{{ form.availability.id_for_label }}" class="form-label text-tudarkblue fw-bold small">Availability Schedule</label>
+                    {{ form.availability }}
+                    {{ form.availability.errors }}
+                </div>
+                <div class="col-12">
+                    <label for="{{ form.profile_picture.id_for_label }}" class="form-label text-tudarkblue fw-bold small">Profile Picture</label>
+                    
+                    {% if form.instance.profile_picture %}
+                        <div class="d-flex align-items-center gap-3 mb-2 mt-1">
+                            <img src="{{ form.instance.profile_picture.url }}" alt="Current Preview" class="rounded object-fit-cover shadow-sm" style="width: 50px; height: 50px;">
+                            <span class="text-muted extra-small">Currently: {{ form.instance.profile_picture.name }}</span>
+                        </div>
+                    {% endif %}
+                    
+                    {{ form.profile_picture }}
+                    {{ form.profile_picture.errors }}
+                </div>
+            </div>
+
+           <div class="d-flex align-items-center gap-3 pt-3">
+    
+                <button type="submit" 
+                        class="btn btn-tuorange text-white rounded-pill px-4 fw-bold m-0 d-inline-flex align-items-center justify-content-center text-nowrap" 
+                        style="height: 46px;">
+                    Save Changes
+                </button>
+
+                <a href="{% url 'tutor_profile_view' request.user.id %}" 
+                hx-boost="true"
+                hx-target="body"
+                class="btn btn-tumedblue text-white rounded-pill px-4 fw-bold text-decoration-none d-inline-flex align-items-center justify-content-center m-0 text-nowrap" 
+                style="height: 46px;">
+                    Cancel
+                </a>
+
+            </div>
+        </form>
+    </div>
+
 </div>
 {% endblock %}
